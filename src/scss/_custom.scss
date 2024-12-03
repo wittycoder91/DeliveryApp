@@ -1,0 +1,36 @@
+// Here you can add other styles
+.w-max {
+  width: max-content;
+}
+
+.h-max {
+  height: max-content;
+}
+
+.bakground-no-repeat {
+  background-repeat: no-repeat;
+}
+
+.background-size-cover {
+  background-size: cover;
+}
+
+.dark-blue {
+  color: white;
+  background-color: #003366;
+  transition: background-color 0.3s ease;
+}
+.dark-blue:hover {
+  color: white;
+  background-color: #002244;
+}
+
+.auth-back {
+  background-image: url('../../public/images/auth_back.jpg');
+}
+.authlogo-back {
+  background-image: url('../../public/images/login_back.png');
+}
+.authlogo {
+  width: 200px !important;
+}
