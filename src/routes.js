@@ -20,7 +20,7 @@ const routes = [
   { path: '/data/deliverylogs', name: 'DeliveryLogs', element: DeliveryLogs },
   { path: '/data/deliverylogdetail', name: 'DeliveryLogDetail', element: DeliverylogDetail },
   { path: '/setting', name: 'Setting', element: Profile, exact: true },
-  { path: '/setting/profile', name: 'Profile', element: Profile },
+  { path: '/setting/setting', name: 'Profile', element: Profile },
 ]
 
 export default routes

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import {
   CCard,
   CCardBody,
-  CCardHeader,
   CCol,
   CFormInput,
   CFormLabel,
@@ -18,11 +17,9 @@ const DeliverylogDetail = () => {
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
-          <CCardHeader>
-            <strong>Delivery Log Detail</strong>
-          </CCardHeader>
+          <h3 className="px-3 pt-3 mb-0">Delivery Log Detail</h3>
           <CCardBody className="d-flex flex-column gap-2">
-            <CCol className="d-flex gap-4">
+            <CCol className="d-flex flex-wrap flex-md-row flex-column gap-4">
               <CCol>
                 <CFormLabel>Material</CFormLabel>
                 <CFormSelect
@@ -37,7 +34,7 @@ const DeliverylogDetail = () => {
                 <CFormInput placeholder="Amount" />
               </CCol>
             </CCol>
-            <CCol className="d-flex gap-4">
+            <CCol className="d-flex flex-wrap flex-md-row flex-column gap-4">
               <CCol>
                 <CFormLabel>Color</CFormLabel>
                 <CFormInput placeholder="Color" />
@@ -47,7 +44,7 @@ const DeliverylogDetail = () => {
                 <CFormInput type="number" placeholder="Quality" />
               </CCol>
             </CCol>
-            <CCol className="d-flex gap-4">
+            <CCol className="d-flex flex-wrap flex-md-row flex-column gap-4">
               <CCol>
                 <CFormLabel>Location</CFormLabel>
                 <CFormInput placeholder="Location" />
@@ -57,7 +54,7 @@ const DeliverylogDetail = () => {
                 <CFormInput placeholder="Note" />
               </CCol>
             </CCol>
-            <CCol className="d-flex gap-4">
+            <CCol className="d-flex flex-wrap flex-md-row flex-column gap-4">
               <CCol className="d-flex flex-column">
                 <CFormLabel>Description</CFormLabel>
                 <CFormTextarea className="h-100"></CFormTextarea>
@@ -71,7 +68,7 @@ const DeliverylogDetail = () => {
                 />
               </CCol>
             </CCol>
-            <CCol className="d-flex gap-4">
+            <CCol className="d-flex flex-wrap flex-md-row flex-column gap-4">
               <CCol>
                 <CFormLabel>Date</CFormLabel>
                 <CFormInput placeholder="Date" />

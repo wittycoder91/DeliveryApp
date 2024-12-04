@@ -40,9 +40,9 @@ const AppHeaderDropdown = () => {
             </CBadge>
           </CDropdownItem>
           <CDropdownHeader className="bg-body-secondary fw-semibold my-2">Settings</CDropdownHeader>
-          <CDropdownItem href="/#/setting/profile">
+          <CDropdownItem href="/#/setting/setting">
             <CIcon icon={cilUser} className="me-2" />
-            Profile
+            Setting
           </CDropdownItem>
           <CDropdownDivider />
           <CDropdownItem href="#/login" onClick={handleLogout}>

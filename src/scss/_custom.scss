@@ -2,9 +2,16 @@
 canvas {
   width: 100% !important;
 }
+td {
+  height: 50px;
+  vertical-align: middle;
+}
 
 .w-max {
   width: max-content;
+}
+.wid-100 {
+  width: 100px;
 }
 
 .h-max {
@@ -60,4 +67,9 @@ canvas {
 
 .dashboard-widget {
   height: 100px;
+}
+
+.delivery-table-banner {
+  height: 200px;
+  object-fit: cover;
 }

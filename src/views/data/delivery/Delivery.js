@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import {
   CCard,
   CCardBody,
-  CCardHeader,
   CCol,
   CTable,
   CTableBody,
@@ -53,12 +52,19 @@ const Tables = () => {
   return (
     <CCol xs={12}>
       <CCard className="mb-4">
-        <CCardHeader>
-          <strong>Delivery</strong>
-        </CCardHeader>
+        <h3 className="px-4 pt-3 pb-1">Delivery</h3>
         <CCardBody className="p-0 d-flex flex-column">
           {/* Table */}
-          <img src="./images/table-banner.jpg" alt="" />
+          <img src="./images/table-banner.jpg" alt="" className="delivery-table-banner" />
+          <CCol className="d-flex justify-content-start mt-4 ms-4">
+            <CButton
+              color="primary"
+              className="wid-100"
+              onClick={() => navigate(`/data/deliverydetail`)}
+            >
+              Add
+            </CButton>
+          </CCol>
           <CCol className="table-responsive p-3">
             <CTable>
               <CTableHead>
@@ -101,15 +107,6 @@ const Tables = () => {
                 ))}
               </CTableBody>
             </CTable>
-          </CCol>
-          <CCol className="d-flex justify-content-end mb-4 me-4">
-            <CButton
-              color="primary"
-              className="w-max"
-              onClick={() => navigate(`/data/deliverydetail`)}
-            >
-              Add
-            </CButton>
           </CCol>
         </CCardBody>
       </CCard>

@@ -1,14 +1,5 @@
 import React, { useState } from 'react'
-import {
-  CButton,
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CCol,
-  CForm,
-  CFormInput,
-  CFormLabel,
-} from '@coreui/react'
+import { CButton, CCard, CCardBody, CCol, CForm, CFormInput, CFormLabel } from '@coreui/react'
 
 const Profile = () => {
   const [logoPreview, setLogoPreview] = useState(null)
@@ -27,9 +18,7 @@ const Profile = () => {
   return (
     <CCol xs={12}>
       <CCard className="mb-4">
-        <CCardHeader>
-          <strong>Profile</strong>
-        </CCardHeader>
+        <h3 className="px-3 pt-3 mb-0">Profile</h3>
         <CCardBody>
           <CForm className="row g-3">
             <CCol md={6}>

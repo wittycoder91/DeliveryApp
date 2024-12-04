@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import {
   CCard,
   CCardBody,
-  CCardHeader,
   CCol,
   CTable,
   CTableBody,
@@ -106,9 +105,7 @@ const Tables = () => {
   return (
     <CCol xs={12}>
       <CCard className="mb-4">
-        <CCardHeader>
-          <strong>Delivery History</strong>
-        </CCardHeader>
+        <h3 className="px-4 pt-3 mb-0">Delivery History</h3>
         <CCardBody>
           {/* Table */}
           <CCol className="d-flex justify-content-center align-items-start gap-3">

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { CCard, CCardBody, CCol, CRow, CCardHeader, CProgress } from '@coreui/react'
+import { CCard, CCardBody, CCol, CRow, CProgress } from '@coreui/react'
 import { CChartBar, CChartLine } from '@coreui/react-chartjs'
 import WidgetsDropdown from './WidgetsDropdown'
 
@@ -27,7 +27,7 @@ const Dashboard = () => {
       <CRow>
         <CCol xs={6}>
           <CCard className="mb-4">
-            <CCardHeader>Bar Chart</CCardHeader>
+            <h3 className="px-4 pt-3">Bar Chart</h3>
             <CCardBody>
               <CChartBar
                 data={{
@@ -47,7 +47,7 @@ const Dashboard = () => {
         </CCol>
         <CCol xs={6}>
           <CCard className="mb-4">
-            <CCardHeader>Rewards Chart</CCardHeader>
+            <h3 className="px-4 pt-3">Rewards Chart</h3>
             <CCardBody>
               <CChartLine
                 data={{

@@ -15,7 +15,7 @@ const AppContent = () => {
   }, [navigate]) // Ensure the useEffect runs only once when the component mounts
 
   return (
-    <CCol className="px-5" lg>
+    <CCol className="px-4" lg>
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>
           {routes.map((route, idx) => {
