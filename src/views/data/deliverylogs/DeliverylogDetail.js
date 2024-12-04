@@ -81,6 +81,10 @@ const DeliverylogDetail = () => {
                 <CFormLabel className="delivery-accept w-max">Accepted</CFormLabel>
               </CCol>
             </CCol>
+            <CCol className="d-flex flex-column">
+              <CFormLabel>Feedback</CFormLabel>
+              <CFormTextarea rows={3}></CFormTextarea>
+            </CCol>
             <CCol className="d-flex justify-content-end me-4">
               <Link to="/data/deliverylogs" className="text-decoration-none">
                 <CButton color="primary">Go to Delivery History</CButton>
