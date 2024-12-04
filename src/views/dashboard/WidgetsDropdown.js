@@ -29,9 +29,10 @@ const WidgetsDropdown = (props) => {
   }, [widgetChartRef1, widgetChartRef2])
 
   return (
-    <CRow className={props.className} xs={{ gutter: 4 }}>
+    <CRow className={props.className}>
       <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
+          className="dashboard-widget"
           color="info"
           value={
             <>
@@ -46,6 +47,7 @@ const WidgetsDropdown = (props) => {
       </CCol>
       <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
+          className="dashboard-widget"
           color="info"
           value={
             <>
@@ -60,13 +62,14 @@ const WidgetsDropdown = (props) => {
       </CCol>
       <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
+          className="dashboard-widget"
           color="warning"
           value={
             <>
               3{' '}
               {/* <span className="fs-6 fw-normal">
-                (84.7% <CIcon icon={cilArrowTop} />)
-              </span> */}
+                  (84.7% <CIcon icon={cilArrowTop} />)
+                </span> */}
             </>
           }
           title="Pending"
@@ -74,13 +77,14 @@ const WidgetsDropdown = (props) => {
       </CCol>
       <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
+          className="dashboard-widget"
           color="danger"
           value={
             <>
               4K{' '}
               {/* <span className="fs-6 fw-normal">
-                (-23.6% <CIcon icon={cilArrowBottom} />)
-              </span> */}
+                  (-23.6% <CIcon icon={cilArrowBottom} />)
+                </span> */}
             </>
           }
           title="Appeared"

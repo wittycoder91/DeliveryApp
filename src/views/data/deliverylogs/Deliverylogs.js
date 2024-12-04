@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   CCard,
   CCardBody,
@@ -12,7 +13,6 @@ import {
   CTableRow,
   CPagination,
   CPaginationItem,
-  CContainer,
   CFormSelect,
   CRow,
   CInputGroup,
@@ -26,26 +26,33 @@ import { cilSearch } from '@coreui/icons'
 const Tables = () => {
   const tableHeaders = [
     'No',
-    'Company Name',
     'Material',
+    'Image',
+    'Description',
+    'Quality',
     'Amount',
     'Send Date',
+    'location',
     'Status',
-    'Feedback',
     'Note',
+    'Feedback',
   ]
 
   const tableData = Array.from({ length: 500 }, (_, index) => ({
     no: index + 1,
-    companyName: `Company ${index + 1}`,
-    product: `Material ${index + 1}`,
+    material: `Material ${index + 1}`,
+    image: `Image ${index + 1}`,
+    description: `Description ${index + 1}`,
+    quality: `Quality ${index + 1}`,
     amount: (index + 1) * 10,
     sendDate: `2020-09-${String(index + 10).padStart(2, '0')}`,
-    status: index % 2 === 0 ? 'Accepted' : 'Pending',
-    feedback: index % 2 === 0 ? 'Good' : 'Average',
+    location: `Location ${index + 1}`,
+    status: index % 2 === 0 ? 'Accepted' : 'Rejected',
     note: `Note ${index + 1}`,
+    feedback: index % 2 === 0 ? 'Good' : 'Average',
   }))
 
+  const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10) // Default rows per page
   const totalPages = Math.ceil(tableData.length / itemsPerPage)
@@ -104,7 +111,7 @@ const Tables = () => {
         </CCardHeader>
         <CCardBody>
           {/* Table */}
-          <CContainer className="d-flex justify-content-center align-items-start gap-3">
+          <CCol className="d-flex justify-content-center align-items-start gap-3">
             <CInputGroup className="flex-nowrap mb-4">
               <CInputGroupText id="addon-wrapping">
                 <CIcon icon={cilSearch} />
@@ -118,8 +125,8 @@ const Tables = () => {
               />
             </CInputGroup>
             <CButton color="primary">Search</CButton>
-          </CContainer>
-          <CContainer className="table-responsive">
+          </CCol>
+          <CCol className="table-responsive">
             <CTable>
               <CTableHead>
                 <CTableRow>
@@ -132,22 +139,35 @@ const Tables = () => {
               </CTableHead>
               <CTableBody>
                 {currentTableData.map((row, index) => (
-                  <CTableRow key={index}>
+                  <CTableRow
+                    key={index}
+                    onClick={() => navigate(`/data/deliverylogdetail`)}
+                    className="cursor-pointer"
+                  >
                     <CTableHeaderCell className="text-center" scope="row">
                       {startIndex + index + 1}
                     </CTableHeaderCell>
-                    <CTableDataCell className="text-center">{row.companyName}</CTableDataCell>
-                    <CTableDataCell className="text-center">{row.product}</CTableDataCell>
+                    <CTableDataCell className="text-center">{row.material}</CTableDataCell>
+                    <CTableDataCell className="text-center">{row.image}</CTableDataCell>
+                    <CTableDataCell className="text-center">{row.description}</CTableDataCell>
+                    <CTableDataCell className="text-center">{row.quality}</CTableDataCell>
                     <CTableDataCell className="text-center">{row.amount}</CTableDataCell>
                     <CTableDataCell className="text-center">{row.sendDate}</CTableDataCell>
-                    <CTableDataCell className="text-center">{row.status}</CTableDataCell>
-                    <CTableDataCell className="text-center">{row.feedback}</CTableDataCell>
+                    <CTableDataCell className="text-center">{row.location}</CTableDataCell>
+                    <CTableDataCell className="text-center">
+                      {row.status === 'Accepted' ? (
+                        <span className="delivery-accept">{row.status}</span>
+                      ) : (
+                        <span className="delivery-reject">{row.status}</span>
+                      )}
+                    </CTableDataCell>
                     <CTableDataCell className="text-center">{row.note}</CTableDataCell>
+                    <CTableDataCell className="text-center">{row.feedback}</CTableDataCell>
                   </CTableRow>
                 ))}
               </CTableBody>
             </CTable>
-          </CContainer>
+          </CCol>
           {/* Pagination */}
           <CRow className="mt-2">
             <CCol

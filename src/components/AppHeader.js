@@ -43,7 +43,7 @@ const AppHeader = () => {
         </CHeaderToggler>
         <CHeaderNav className="ms-auto">
           <CNavItem>
-            <CNavLink href="#" className="position-relative">
+            <CNavLink href="/#/data/deliverylogs" className="position-relative">
               <CIcon icon={cilBell} size="lg" />
               <span className="badge bg-danger rounded-pill position-absolute top-0 end-0">5</span>
             </CNavLink>

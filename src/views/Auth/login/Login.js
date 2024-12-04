@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -14,9 +14,34 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import { Bounce, ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 
 const Login = () => {
+  const navigate = useNavigate()
+  const [curUserId, setCurUserId] = useState('')
+  const [curPassword, setCurPassword] = useState('')
+
+  const handleLogin = () => {
+    if (curUserId.length === 0 || curPassword.length === 0) {
+      toast.warn('Please enter both username and password', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
+    } else {
+      navigate(`/dashboard`)
+      localStorage.setItem('login', 'success')
+    }
+  }
+
   return (
     <div className="auth-back bakground-no-repeat background-size-cover bg-body-tertiary h-100 min-vh-100 d-flex flex-row align-items-center">
       <CContainer className="h-75">
@@ -31,7 +56,11 @@ const Login = () => {
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
-                    <CFormInput placeholder="Username" autoComplete="username" />
+                    <CFormInput
+                      placeholder="Username"
+                      autoComplete="username"
+                      onChange={(e) => setCurUserId(e.target.value)}
+                    />
                   </CInputGroup>
                   <CInputGroup>
                     <CInputGroupText>
@@ -41,6 +70,7 @@ const Login = () => {
                       type="password"
                       placeholder="Password"
                       autoComplete="current-password"
+                      onChange={(e) => setCurPassword(e.target.value)}
                     />
                   </CInputGroup>
                   <CCol className="text-end mt-1">
@@ -49,9 +79,9 @@ const Login = () => {
                     </CButton>
                   </CCol>
                   <CCol className="w-100 mt-2">
-                    <Link to="/dashboard" className="text-decoration-none">
-                      <CButton className="w-100 px-4 dark-blue">Login</CButton>
-                    </Link>
+                    <CButton className="w-100 px-4 dark-blue" onClick={handleLogin}>
+                      Login
+                    </CButton>
                   </CCol>
                   <CCol className="w-100 mt-4 text-center">
                     <p className="text-body-secondary">
@@ -75,6 +105,18 @@ const Login = () => {
             </CCard>
           </CCardGroup>
         </CRow>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </CContainer>
     </div>
   )

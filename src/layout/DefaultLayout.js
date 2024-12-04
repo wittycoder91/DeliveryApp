@@ -2,6 +2,8 @@ import React from 'react'
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
 
 const DefaultLayout = () => {
+  console.log('asdfasdfasssssssssss')
+
   return (
     <div>
       <AppSidebar />

@@ -1,13 +1,21 @@
-import React, { Suspense } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
-import { CContainer, CSpinner } from '@coreui/react'
+import React, { Suspense, useEffect } from 'react'
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
+import { CSpinner, CCol } from '@coreui/react'
 
 // routes config
 import routes from '../routes'
 
 const AppContent = () => {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!localStorage.getItem('login')) {
+      navigate('/login', { replace: true }) // Use navigate instead of window.location.href
+    }
+  }, [navigate]) // Ensure the useEffect runs only once when the component mounts
+
   return (
-    <CContainer className="px-4" lg>
+    <CCol className="px-5" lg>
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>
           {routes.map((route, idx) => {
@@ -26,7 +34,7 @@ const AppContent = () => {
           <Route path="/" element={<Navigate to="dashboard" replace />} />
         </Routes>
       </Suspense>
-    </CContainer>
+    </CCol>
   )
 }
 
