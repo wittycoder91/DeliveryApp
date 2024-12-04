@@ -16,6 +16,7 @@ import {
   CModalTitle,
   CModalBody,
   CModalFooter,
+  CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilPencil, cilXCircle } from '@coreui/icons'
@@ -52,19 +53,24 @@ const Tables = () => {
   return (
     <CCol xs={12}>
       <CCard className="mb-4">
-        <h3 className="px-4 pt-3 pb-1">Delivery</h3>
+        <CRow className="flex-row justify-content-between mx-4 mt-3 mb-2">
+          <h3 className="w-max p-0 m-0">Delivery</h3>
+          <CButton
+            color="primary"
+            className="wid-100 dark-blue"
+            onClick={() => navigate(`/data/deliverydetail`)}
+          >
+            Add
+          </CButton>
+        </CRow>
+        <CCardBody className="p-0 d-flex flex-column">
+          <img src="./images/table-banner.jpg" alt="" className="delivery-table-banner" />
+        </CCardBody>
+      </CCard>
+      <CCard className="mb-4">
+        <h3 className="px-4 pt-3 mb-0">Pending Deliveries</h3>
         <CCardBody className="p-0 d-flex flex-column">
           {/* Table */}
-          <img src="./images/table-banner.jpg" alt="" className="delivery-table-banner" />
-          <CCol className="d-flex justify-content-start mt-4 ms-4">
-            <CButton
-              color="primary"
-              className="wid-100"
-              onClick={() => navigate(`/data/deliverydetail`)}
-            >
-              Add
-            </CButton>
-          </CCol>
           <CCol className="table-responsive p-3">
             <CTable>
               <CTableHead>

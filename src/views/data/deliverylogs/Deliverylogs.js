@@ -121,7 +121,9 @@ const Tables = () => {
                 className="w-max"
               />
             </CInputGroup>
-            <CButton color="primary">Search</CButton>
+            <CButton color="primary" className="dark-blue">
+              Search
+            </CButton>
           </CCol>
           <CCol className="table-responsive">
             <CTable>

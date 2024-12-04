@@ -207,7 +207,7 @@ const DeliveryDetail = () => {
             </CCol>
             <CCol className="d-flex justify-content-end me-4">
               <Link to="/data/delivery" className="text-decoration-none">
-                <CButton color="primary" className="wid-100">
+                <CButton color="primary" className="wid-100 dark-blue">
                   Confirm
                 </CButton>
               </Link>

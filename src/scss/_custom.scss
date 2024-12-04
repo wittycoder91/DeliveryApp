@@ -2,7 +2,8 @@
 canvas {
   width: 100% !important;
 }
-td {
+td,
+th {
   height: 50px;
   vertical-align: middle;
 }
@@ -28,6 +29,10 @@ td {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.progress-bar {
+  background-color: green !important;
 }
 
 .delivery-accept,

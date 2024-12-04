@@ -84,7 +84,9 @@ const DeliverylogDetail = () => {
             </CCol>
             <CCol className="d-flex justify-content-end me-4">
               <Link to="/data/deliverylogs" className="text-decoration-none">
-                <CButton color="primary">Go to Delivery History</CButton>
+                <CButton color="primary" className="dark-blue">
+                  Go to Delivery History
+                </CButton>
               </Link>
             </CCol>
           </CCardBody>
