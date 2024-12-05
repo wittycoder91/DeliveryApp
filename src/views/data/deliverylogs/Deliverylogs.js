@@ -46,7 +46,7 @@ const Tables = () => {
     amount: (index + 1) * 10,
     sendDate: `2020-09-${String(index + 10).padStart(2, '0')}`,
     location: `Location ${index + 1}`,
-    status: index % 2 === 0 ? 'Accepted' : 'Rejected',
+    status: index % 2 === 0 ? 'Approved' : 'Rejected',
     note: `Note ${index + 1}`,
     feedback: index % 2 === 0 ? 'Good' : 'Average',
   }))
@@ -154,7 +154,7 @@ const Tables = () => {
                     <CTableDataCell className="text-center">{row.sendDate}</CTableDataCell>
                     <CTableDataCell className="text-center">{row.location}</CTableDataCell>
                     <CTableDataCell className="text-center">
-                      {row.status === 'Accepted' ? (
+                      {row.status === 'Approved' ? (
                         <span className="delivery-accept">{row.status}</span>
                       ) : (
                         <span className="delivery-reject">{row.status}</span>

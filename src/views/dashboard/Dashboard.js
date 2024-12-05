@@ -27,7 +27,7 @@ const Dashboard = () => {
       <CRow>
         <CCol xs={6}>
           <CCard className="mb-4">
-            <h3 className="px-4 pt-3">Bar Chart</h3>
+            <h3 className="px-4 pt-3">Delivery Chart</h3>
             <CCardBody>
               <CChartBar
                 data={{

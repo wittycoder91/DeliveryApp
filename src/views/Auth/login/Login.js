@@ -73,12 +73,12 @@ const Login = () => {
                       onChange={(e) => setCurPassword(e.target.value)}
                     />
                   </CInputGroup>
-                  <CCol className="text-end mt-1">
+                  {/* <CCol className="text-end mt-1">
                     <CButton color="link" className="text-decoration-none px-0">
                       Forgot password?
                     </CButton>
-                  </CCol>
-                  <CCol className="w-100 mt-2">
+                  </CCol> */}
+                  <CCol className="w-100 mt-4">
                     <CButton className="w-100 px-4 dark-blue" onClick={handleLogin}>
                       Login
                     </CButton>
@@ -98,8 +98,8 @@ const Login = () => {
               <CCardBody className="d-flex justify-content-center align-items-center text-center">
                 <CRow className="justify-content-center align-items-center gap-3">
                   <img src="./logo_transparent.png" className="authlogo" alt="" />
-                  <h2>Client Company name</h2>
-                  <p>Company description</p>
+                  <h2>Supplier name</h2>
+                  <p>Supplier description</p>
                 </CRow>
               </CCardBody>
             </CCard>

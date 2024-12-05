@@ -75,8 +75,6 @@ const DeliveryDetail = () => {
     }
   }
 
-  console.log(curDate)
-
   return (
     <CRow>
       <CCol xs={12}>

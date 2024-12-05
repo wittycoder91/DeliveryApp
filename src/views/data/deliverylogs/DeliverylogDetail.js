@@ -17,7 +17,7 @@ const DeliverylogDetail = () => {
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
-          <h3 className="px-3 pt-3 mb-0">Delivery Log Detail</h3>
+          <h3 className="px-3 pt-3 mb-0">Delivery History Detail</h3>
           <CCardBody className="d-flex flex-column gap-2">
             <CCol className="d-flex flex-wrap flex-md-row flex-column gap-4">
               <CCol>
@@ -75,7 +75,7 @@ const DeliverylogDetail = () => {
               </CCol>
               <CCol className="d-flex flex-column">
                 <CFormLabel>Status</CFormLabel>
-                <CFormLabel className="delivery-accept w-max">Accepted</CFormLabel>
+                <CFormLabel className="delivery-accept w-max">Approved</CFormLabel>
               </CCol>
             </CCol>
             <CCol className="d-flex flex-column">

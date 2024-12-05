@@ -43,7 +43,7 @@ const Register = () => {
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
-                    <CFormInput placeholder="Company Name" autoComplete="Company Name" />
+                    <CFormInput placeholder="Supplier" autoComplete="Supplier" />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>@</CInputGroupText>
@@ -75,7 +75,7 @@ const Register = () => {
                     </CInputGroupText>
                     <CFormInput
                       type="file"
-                      placeholder="Upload Company Logo"
+                      placeholder="Upload Supplier Logo"
                       accept="image/*"
                       onChange={handleLogoChange}
                     />
