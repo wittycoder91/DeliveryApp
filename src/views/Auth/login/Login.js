@@ -25,7 +25,7 @@ const Login = () => {
 
   const handleLogin = () => {
     if (curUserId.length === 0 || curPassword.length === 0) {
-      toast.warn('Please enter both username and password', {
+      toast.error('Please enter both username and password', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,

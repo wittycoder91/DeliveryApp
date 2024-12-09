@@ -12,20 +12,115 @@ import {
   CInputGroupText,
   CRow,
 } from '@coreui/react'
+import axios from 'axios'
 import CIcon from '@coreui/icons-react'
+import { Bounce, ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { cilLockLocked, cilUser, cilImage } from '@coreui/icons'
 
 const Register = () => {
+  const [curName, setCurName] = useState('')
+  const [curEmail, setCurEmail] = useState('')
+  const [curPassword, setCurPassword] = useState('')
+  const [curReenterPassword, setCurReenterPassword] = useState('')
   const [logoPreview, setLogoPreview] = useState(null)
+  const [curImage, setCurImage] = useState('')
 
   const handleLogoChange = (event) => {
     const file = event.target.files[0]
     if (file) {
+      setCurImage(file)
+
       const reader = new FileReader()
       reader.onload = () => {
         setLogoPreview(reader.result) // Set the preview URL
       }
       reader.readAsDataURL(file) // Convert the file to a base64 string
+    }
+  }
+
+  const handleCreateAccount = async () => {
+    if (
+      curName?.length === 0 ||
+      curEmail?.length === 0 ||
+      curPassword?.length === 0 ||
+      curReenterPassword?.length === 0 ||
+      logoPreview?.length === 0
+    ) {
+      toast.error('There are some missing fields', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
+
+      return
+    }
+
+    if (curPassword !== curReenterPassword) {
+      toast.error('Password does not match', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
+
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('image', curImage)
+    formData.append('name', curName)
+    formData.append('email', curEmail)
+    formData.append('password', curPassword)
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/auth/admin/register`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      )
+
+      if (response.data.success) {
+        toast.success('Registration Success', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
+      } else {
+        toast.success(response.data.message, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -43,11 +138,20 @@ const Register = () => {
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
-                    <CFormInput placeholder="Supplier" autoComplete="Supplier" />
+                    <CFormInput
+                      placeholder="Supplier"
+                      value={curName}
+                      onChange={(e) => setCurName(e.target.value)}
+                    />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>@</CInputGroupText>
-                    <CFormInput placeholder="Email" autoComplete="email" />
+                    <CFormInput
+                      placeholder="Email"
+                      type="mail"
+                      value={curEmail}
+                      onChange={(e) => setCurEmail(e.target.value)}
+                    />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
@@ -56,7 +160,8 @@ const Register = () => {
                     <CFormInput
                       type="password"
                       placeholder="Password"
-                      autoComplete="new-password"
+                      value={curPassword}
+                      onChange={(e) => setCurPassword(e.target.value)}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-4">
@@ -66,7 +171,8 @@ const Register = () => {
                     <CFormInput
                       type="password"
                       placeholder="Repeat password"
-                      autoComplete="new-password"
+                      value={curReenterPassword}
+                      onChange={(e) => setCurReenterPassword(e.target.value)}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-4">
@@ -91,7 +197,9 @@ const Register = () => {
                     </div>
                   )}
                   <CCard className="d-grid">
-                    <CButton className="dark-blue">Create Account</CButton>
+                    <CButton className="dark-blue" onClick={handleCreateAccount}>
+                      Create Account
+                    </CButton>
                   </CCard>
                   <CCol className="w-100 mt-4 text-center">
                     <p className="text-body-secondary">
@@ -106,6 +214,18 @@ const Register = () => {
             </CCard>
           </CCol>
         </CRow>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </CContainer>
     </div>
   )

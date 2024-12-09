@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import {
   CCard,
   CCardBody,
@@ -6,7 +7,6 @@ import {
   CFormInput,
   CFormLabel,
   CFormSelect,
-  CFormTextarea,
   CRow,
   CInputGroup,
   CInputGroupText,
@@ -20,18 +20,39 @@ import { DayPicker } from 'react-day-picker'
 import 'react-day-picker/dist/style.css'
 
 const DeliveryDetail = () => {
+  const location = useLocation()
   const [curRepeatStatus, setCurRepeatStatus] = useState(false)
   // Delivery States
   const [curMaterial, setCurMaterial] = useState(0)
-  const [curAmount, setCurAmount] = useState(0)
+  const [curWeight, setCurWeight] = useState(0)
+  const [curPackaging, setCurPackaging] = useState(0)
+  const [curCountPackage, setCurCountPackage] = useState(0)
+  const [curResidue, setCurResidue] = useState('')
   const [curColor, setCurColor] = useState('')
-  const [curQuality, setCurQuality] = useState('')
-  const [curLocation, setCurLocation] = useState('')
-  const [curNote, setCurNote] = useState('')
-  const [curDesc, setCurDesc] = useState('')
+  const [curCondition, setCurCondition] = useState('')
+  const [curStatus, setCurStatus] = useState('')
   const [curLogoPreview, setCurLogoPreview] = useState(null)
   const [curDate, setCurDate] = useState('')
   const [curTime, setCurTime] = useState(0)
+
+  useEffect(() => {
+    getInitialValue()
+  }, [location.pathname])
+
+  const getInitialValue = () => {
+    setCurMaterial(0)
+    setCurWeight(0)
+    setCurPackaging(0)
+    setCurCountPackage(0)
+    setCurColor('')
+    setCurResidue('')
+    setCurCondition('')
+    setCurStatus('')
+    setCurLogoPreview('')
+    setCurTime(0)
+    setCurDate('')
+    setCurRepeatStatus(false)
+  }
 
   // Preview the upload Material Image
   const handleLogoChange = (event) => {
@@ -52,26 +73,18 @@ const DeliveryDetail = () => {
       const date = new Date('2024-10-12T23:50:21.817Z')
 
       setCurMaterial(1)
-      setCurAmount(100)
+      setCurWeight(100)
+      setCurPackaging(1)
+      setCurCountPackage(123)
       setCurColor('Color')
-      setCurQuality('Quality')
-      setCurLocation('location')
-      setCurNote('Note')
-      setCurDesc('Desc')
+      setCurResidue('Residue')
+      setCurCondition('Condition')
+      setCurStatus('Pending')
       setCurLogoPreview('/images/table-banner.jpg')
       setCurTime(2)
       setCurDate(date)
     } else {
-      setCurMaterial(0)
-      setCurAmount(0)
-      setCurColor('')
-      setCurQuality('')
-      setCurLocation('')
-      setCurNote('')
-      setCurDesc('')
-      setCurLogoPreview('')
-      setCurTime(0)
-      setCurDate('')
+      getInitialValue()
     }
   }
 
@@ -102,11 +115,35 @@ const DeliveryDetail = () => {
                 />
               </CCol>
               <CCol>
-                <CFormLabel>Amount</CFormLabel>
+                <CFormLabel>Weight(lbs)</CFormLabel>
                 <CFormInput
-                  placeholder="Amount"
-                  value={curAmount}
-                  onChange={(e) => setCurAmount(e.target.value)}
+                  placeholder="Weight(lbs)"
+                  value={curWeight}
+                  type="number"
+                  onChange={(e) => setCurWeight(e.target.value)}
+                />
+              </CCol>
+            </CCol>
+            <CCol className="d-flex flex-wrap flex-md-row flex-column gap-4">
+              <CCol>
+                <CFormLabel>Packaging</CFormLabel>
+                <CFormSelect
+                  options={[
+                    { label: 'Baled', value: 0 },
+                    { label: 'Stacked on Skids', value: 1 },
+                    { label: 'Loosed in Boxes', value: 2 },
+                  ]}
+                  value={curPackaging}
+                  onChange={(e) => setCurPackaging(e.target.value)}
+                />
+              </CCol>
+              <CCol>
+                <CFormLabel>The Total of packages</CFormLabel>
+                <CFormInput
+                  placeholder="The Total of packages"
+                  value={curCountPackage}
+                  type="number"
+                  onChange={(e) => setCurCountPackage(e.target.value)}
                 />
               </CCol>
             </CCol>
@@ -120,40 +157,32 @@ const DeliveryDetail = () => {
                 />
               </CCol>
               <CCol>
-                <CFormLabel>Quality</CFormLabel>
+                <CFormLabel>Residue Material</CFormLabel>
                 <CFormInput
-                  type="number"
-                  placeholder="Quality"
-                  value={curQuality}
-                  onChange={(e) => setCurQuality(e.target.value)}
+                  placeholder="Residue"
+                  value={curResidue}
+                  onChange={(e) => setCurResidue(e.target.value)}
                 />
               </CCol>
             </CCol>
             <CCol className="d-flex flex-wrap flex-md-row flex-column gap-4">
               <CCol>
-                <CFormLabel>Location</CFormLabel>
+                <CFormLabel>Conditions</CFormLabel>
                 <CFormInput
-                  placeholder="Location"
-                  value={curLocation}
-                  onChange={(e) => setCurLocation(e.target.value)}
+                  placeholder="Conditions"
+                  value={curCondition}
+                  onChange={(e) => setCurCondition(e.target.value)}
                 />
               </CCol>
               <CCol>
-                <CFormLabel>Note</CFormLabel>
+                <CFormLabel>Status</CFormLabel>
                 <CFormInput
-                  placeholder="Note"
-                  value={curNote}
-                  onChange={(e) => setCurNote(e.target.value)}
+                  placeholder="Pending"
+                  value={curStatus}
+                  readOnly
+                  onChange={(e) => setCurStatus(e.target.value)}
                 />
               </CCol>
-            </CCol>
-            <CCol className="d-flex flex-column">
-              <CFormLabel>Description</CFormLabel>
-              <CFormTextarea
-                rows={5}
-                value={curDesc}
-                onChange={(e) => setCurDesc(e.target.value)}
-              ></CFormTextarea>
             </CCol>
             <CInputGroup className="mb-4">
               <CInputGroupText>

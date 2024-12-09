@@ -25,26 +25,30 @@ const Tables = () => {
   const tableHeaders = [
     'No',
     'Material',
+    'Weight',
+    'Packaging',
+    'The Total of packages',
+    'Residue Material',
+    'Color',
+    'Conditions',
     'Image',
-    'Description',
-    'Quality',
-    'Amount',
     'Send Date',
-    'location',
-    'Note',
+    'Status',
     'Action',
   ]
 
   const tableData = Array.from({ length: 3 }, (_, index) => ({
     no: index + 1,
-    product: `Material ${index + 1}`,
+    material: `Material ${index + 1}`,
+    weight: `Weight ${index + 1}`,
+    packaging: `Packaging ${index + 1}`,
+    packagingCount: `The Total of packages ${index + 1}`,
+    residue: `Residue Material ${index + 1}`,
+    color: `Color ${index + 1}`,
+    conditions: `Conditions ${index + 1}`,
     image: `Image ${index + 1}`,
-    description: `Description ${index + 1}`,
-    quality: `Quality ${index + 1}`,
-    amount: `Amount ${index + 1}`,
     sendDate: `2020-09-${String(index + 10).padStart(2, '0')}`,
-    location: `Location ${index + 1}`,
-    note: `Note ${index + 1}`,
+    status: index % 2 === 0 ? 'Pending' : 'Accepted',
   }))
 
   const navigate = useNavigate()
@@ -68,7 +72,7 @@ const Tables = () => {
         </CCardBody>
       </CCard>
       <CCard className="mb-4">
-        <h3 className="px-4 pt-3 mb-0">Pending Deliveries</h3>
+        <h3 className="px-4 pt-3 mb-0">Pending & Accepted Deliveries</h3>
         <CCardBody className="p-0 d-flex flex-column">
           {/* Table */}
           <CCol className="table-responsive p-3">
@@ -88,14 +92,16 @@ const Tables = () => {
                     <CTableHeaderCell className="text-center" scope="row">
                       {index + 1}
                     </CTableHeaderCell>
-                    <CTableDataCell className="text-center">{row.product}</CTableDataCell>
+                    <CTableDataCell className="text-center">{row.material}</CTableDataCell>
+                    <CTableDataCell className="text-center">{row.weight}</CTableDataCell>
+                    <CTableDataCell className="text-center">{row.packaging}</CTableDataCell>
+                    <CTableDataCell className="text-center">{row.packagingCount}</CTableDataCell>
+                    <CTableDataCell className="text-center">{row.residue}</CTableDataCell>
+                    <CTableDataCell className="text-center">{row.color}</CTableDataCell>
+                    <CTableDataCell className="text-center">{row.conditions}</CTableDataCell>
                     <CTableDataCell className="text-center">{row.image}</CTableDataCell>
-                    <CTableDataCell className="text-center">{row.description}</CTableDataCell>
-                    <CTableDataCell className="text-center">{row.quality}</CTableDataCell>
-                    <CTableDataCell className="text-center">{row.amount}</CTableDataCell>
                     <CTableDataCell className="text-center">{row.sendDate}</CTableDataCell>
-                    <CTableDataCell className="text-center">{row.location}</CTableDataCell>
-                    <CTableDataCell className="text-center">{row.note}</CTableDataCell>
+                    <CTableDataCell className="text-center">{row.status}</CTableDataCell>
                     <CTableDataCell>
                       <CCol className="d-flex justify-content-center align-items-center">
                         <CButton>
@@ -126,7 +132,7 @@ const Tables = () => {
         <CModalHeader>
           <CModalTitle id="VerticallyCenteredExample">Delivery Remove</CModalTitle>
         </CModalHeader>
-        <CModalBody>Do you want to remove delivery information</CModalBody>
+        <CModalBody>Do you want to remove the current delivery information</CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisibleDel(false)}>
             Cancel
