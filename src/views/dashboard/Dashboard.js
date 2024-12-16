@@ -152,13 +152,13 @@ const Dashboard = () => {
             className="w-100 p-0 fs-5"
           />
           <CFormLabel className="position-absolute text-black fs-4 mb-0">{curRewards}</CFormLabel>
-          {
-            curLoyalty > 0 && (
-              <CCol className="d-flex justify-content-center align-items-center mx-2">
-                <img src={curImageUrl} alt="" width={42} height={50} />
-              </CCol>
-            )
-          }
+          {curLoyalty > 0 ? (
+            <CCol className="d-flex justify-content-center align-items-center mx-2">
+              <img src={curImageUrl} alt="" width={42} height={50} />
+            </CCol>
+          ) : (
+            <></>
+          )}
         </CCol>
       </CCard>
       <CCard className="p-4 gap-2">

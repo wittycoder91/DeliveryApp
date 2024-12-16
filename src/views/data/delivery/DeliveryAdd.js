@@ -187,6 +187,9 @@ const DeliveryAdd = () => {
 
     if (e.target.checked === true) {
       getRecentDelivery()
+    } else {
+      if (allPackages.length > 0) setCurPackaging(allPackages[0]._id)
+      if (allMaterials.length > 0) setCurMaterial(allMaterials[0]._id)
     }
   }
 
