@@ -14,9 +14,12 @@ import {
 } from '@coreui/react'
 import axios from 'axios'
 import CIcon from '@coreui/icons-react'
-import { Bounce, ToastContainer, toast } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { cilLockLocked, cilUser, cilImage } from '@coreui/icons'
+import { cilLockLocked, cilUser, cilImage, cilBuilding } from '@coreui/icons'
+
+import { API_URLS } from '../../../config/Constants'
+import { showErrorMsg, showSuccessMsg } from 'src/config/common'
 
 const Register = () => {
   const [curName, setCurName] = useState('')
@@ -25,6 +28,10 @@ const Register = () => {
   const [curReenterPassword, setCurReenterPassword] = useState('')
   const [logoPreview, setLogoPreview] = useState(null)
   const [curImage, setCurImage] = useState('')
+  const [curAddress, setCurAddress] = useState('')
+  const [curCity, setCurCity] = useState('')
+  const [curState, setCurState] = useState('')
+  const [curZipcode, setCurZipcode] = useState('')
 
   const handleLogoChange = (event) => {
     const file = event.target.files[0]
@@ -45,35 +52,20 @@ const Register = () => {
       curEmail?.length === 0 ||
       curPassword?.length === 0 ||
       curReenterPassword?.length === 0 ||
-      logoPreview?.length === 0
+      curImage?.length === 0 ||
+      logoPreview?.length === 0 ||
+      curAddress?.length === 0 ||
+      curCity?.length === 0 ||
+      curState?.length === 0 ||
+      curZipcode?.length === 0
     ) {
-      toast.error('There are some missing fields', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      })
+      showErrorMsg('There are some missing fields')
 
       return
     }
 
     if (curPassword !== curReenterPassword) {
-      toast.error('Password does not match', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      })
+      showErrorMsg('Password does not match')
 
       return
     }
@@ -83,41 +75,21 @@ const Register = () => {
     formData.append('name', curName)
     formData.append('email', curEmail)
     formData.append('password', curPassword)
+    formData.append('address', curAddress)
+    formData.append('city', curCity)
+    formData.append('state', curState)
+    formData.append('zipcode', curZipcode)
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/auth/admin/register`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+      const response = await axios.post(API_URLS.REGISTER, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
         },
-      )
+      })
 
       if (response.data.success) {
-        toast.success('Registration Success', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        })
+        showSuccessMsg('Registration Success')
       } else {
-        toast.success(response.data.message, {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        })
+        showSuccessMsg(response.data.message)
       }
     } catch (error) {
       console.error(error)
@@ -151,6 +123,46 @@ const Register = () => {
                       type="mail"
                       value={curEmail}
                       onChange={(e) => setCurEmail(e.target.value)}
+                    />
+                  </CInputGroup>
+                  <CInputGroup className="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon={cilBuilding} />
+                    </CInputGroupText>
+                    <CFormInput
+                      placeholder="Address"
+                      value={curAddress}
+                      onChange={(e) => setCurAddress(e.target.value)}
+                    />
+                  </CInputGroup>
+                  <CInputGroup className="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon={cilBuilding} />
+                    </CInputGroupText>
+                    <CFormInput
+                      placeholder="City"
+                      value={curCity}
+                      onChange={(e) => setCurCity(e.target.value)}
+                    />
+                  </CInputGroup>
+                  <CInputGroup className="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon={cilBuilding} />
+                    </CInputGroupText>
+                    <CFormInput
+                      placeholder="State"
+                      value={curState}
+                      onChange={(e) => setCurState(e.target.value)}
+                    />
+                  </CInputGroup>
+                  <CInputGroup className="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon={cilBuilding} />
+                    </CInputGroupText>
+                    <CFormInput
+                      placeholder="Zip Code"
+                      value={curZipcode}
+                      onChange={(e) => setCurZipcode(e.target.value)}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-3">

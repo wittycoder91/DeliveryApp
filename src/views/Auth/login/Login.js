@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useCookies } from 'react-cookie'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   CButton,
@@ -13,32 +14,41 @@ import {
   CInputGroupText,
   CRow,
 } from '@coreui/react'
+import axios from 'axios'
 import CIcon from '@coreui/icons-react'
-import { Bounce, ToastContainer, toast } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 
+import { API_URLS } from '../../../config/Constants'
+import { showErrorMsg } from 'src/config/common'
+
 const Login = () => {
   const navigate = useNavigate()
-  const [curUserId, setCurUserId] = useState('')
+  const [, setCookie] = useCookies()
+  const [curUserEmail, setCurUserEmail] = useState('')
   const [curPassword, setCurPassword] = useState('')
 
-  const handleLogin = () => {
-    if (curUserId.length === 0 || curPassword.length === 0) {
-      toast.error('Please enter both username and password', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      })
+  const handleLogin = async () => {
+    if (curUserEmail.length === 0 || curPassword.length === 0) {
+      showErrorMsg('Please enter both username and password')
     } else {
-      navigate(`/dashboard`)
-      localStorage.setItem('login', 'success')
+      const response = await axios.post(API_URLS.LOGIN, {
+        email: curUserEmail,
+        password: curPassword,
+      })
+
+      if (response.data.success) {
+        localStorage.setItem('email', response.data.user?.email)
+        localStorage.setItem('token', response.data.token)
+        setCookie('notification', 0)
+        setCookie('notificationdata', [])
+        setCookie('userid', response.data.user?._id)
+
+        navigate(`/dashboard`)
+      } else {
+        showErrorMsg(response.data.message)
+      }
     }
   }
 
@@ -57,9 +67,9 @@ const Login = () => {
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="Username"
-                      autoComplete="username"
-                      onChange={(e) => setCurUserId(e.target.value)}
+                      placeholder="User Email"
+                      autoComplete="User Email"
+                      onChange={(e) => setCurUserEmail(e.target.value)}
                     />
                   </CInputGroup>
                   <CInputGroup>
