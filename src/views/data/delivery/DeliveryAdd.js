@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
   CCard,
   CCardBody,
@@ -27,6 +27,7 @@ import { showSuccessMsg, showWarningMsg, showErrorMsg } from 'src/config/common'
 const DeliveryAdd = () => {
   const fileInputRef = useRef(null)
   const location = useLocation()
+  const navigate = useNavigate()
   const [curRepeatStatus, setCurRepeatStatus] = useState(false)
   // Delivery States
   const [allMaterials, setAllMaterials] = useState([])
@@ -242,7 +243,7 @@ const DeliveryAdd = () => {
       if (response.data.success) {
         showSuccessMsg('The delivery request was successfully sent.')
 
-        // navigate('/data/delivery')
+        navigate('/data/delivery')
       } else {
         showWarningMsg(response.data.message)
       }
@@ -351,14 +352,14 @@ const DeliveryAdd = () => {
             </CInputGroup>
             {(curLogoPreview || curImageUrl) && (
               <div className="mb-4 text-center">
-                <p className="text-body-secondary">Logo Preview:</p>
+                <p className="text-body-secondary">Delivery Upload Image</p>
                 <img
                   src={
                     curLogoPreview
                       ? curLogoPreview
                       : `${process.env.REACT_APP_UPLOAD_URL}/${curImageUrl}`
                   }
-                  alt="Logo Preview"
+                  alt="Delivery Uploaded"
                   style={{ maxWidth: '100%', maxHeight: '150px', borderRadius: '5px' }}
                 />
               </div>
