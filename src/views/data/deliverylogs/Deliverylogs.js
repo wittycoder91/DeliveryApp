@@ -34,6 +34,8 @@ const Tables = () => {
     'PO #',
     'Material',
     'Weight',
+    'Tare Weight',
+    'Net Weight',
     'Packaging',
     'The Total of packages',
     'Residue Material',
@@ -42,6 +44,8 @@ const Tables = () => {
     'Date',
     'Time',
     'Status',
+    'Quality grade',
+    'Inspection',
     'Feedback',
   ]
 
@@ -277,6 +281,8 @@ const Tables = () => {
                       </CTableDataCell>
                       <CTableDataCell className="text-center">{row?.materialName}</CTableDataCell>
                       <CTableDataCell className="text-center">{row?.weight}</CTableDataCell>
+                      <CTableDataCell className="text-center">{row?.tareamount}</CTableDataCell>
+                      <CTableDataCell className="text-center">{row?.netamount}</CTableDataCell>
                       <CTableDataCell className="text-center">{row?.packageName}</CTableDataCell>
                       <CTableDataCell className="text-center">{row?.countpackage}</CTableDataCell>
                       <CTableDataCell className="text-center">{row?.residue}</CTableDataCell>
@@ -289,6 +295,8 @@ const Tables = () => {
                       <CTableDataCell className="text-center">
                         {row?.status === -1 ? 'Rejected' : 'Accepted'}
                       </CTableDataCell>
+                      <CTableDataCell className="text-center">{row?.qualityName}</CTableDataCell>
+                      <CTableDataCell className="text-center">{row?.insepction}</CTableDataCell>
                       <CTableDataCell className="text-center">{row?.feedback}</CTableDataCell>
                     </CTableRow>
                   ))

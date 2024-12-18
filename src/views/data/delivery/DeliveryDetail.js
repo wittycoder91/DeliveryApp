@@ -205,7 +205,7 @@ const DeliveryDetail = () => {
                     curStatus === 0
                       ? 'Waiting'
                       : curStatus === 1
-                        ? 'Pending'
+                        ? 'Pending for Receiving'
                         : curStatus === 2
                           ? 'Received'
                           : 'Accepted'
@@ -218,8 +218,8 @@ const DeliveryDetail = () => {
               <div className="mb-4 text-center">
                 <p className="text-body-secondary">Delivery Uploaded Image:</p>
                 <img
-                  src={`${process.env.REACT_APP_UPLOAD_URL}/${curLogoPreview}`}
-                  alt="Logo Preview"
+                  src={`${process.env.REACT_APP_UPLOAD_URL}${curLogoPreview}`}
+                  alt="Delivery"
                   style={{ maxWidth: '100%', maxHeight: '150px', borderRadius: '5px' }}
                 />
               </div>

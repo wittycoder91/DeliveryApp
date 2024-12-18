@@ -112,7 +112,7 @@ const Profile = () => {
       })
 
       if (response.data.success && response.data.data) {
-        const avatarUrl = `${process.env.REACT_APP_UPLOAD_URL}/${response.data.data?.avatarPath}`
+        const avatarUrl = `${process.env.REACT_APP_UPLOAD_URL}${response.data.data?.avatarPath}`
         dispatch({ type: 'setAvatar', avatar: avatarUrl })
 
         localStorage.setItem('email', curEmail)
@@ -223,9 +223,9 @@ const Profile = () => {
                   src={
                     curLogoPreview
                       ? curLogoPreview
-                      : `${process.env.REACT_APP_UPLOAD_URL}/${curImageUrl}`
+                      : `${process.env.REACT_APP_UPLOAD_URL}${curImageUrl}`
                   }
-                  alt="Logo Preview"
+                  alt="Delivery"
                   style={{ maxWidth: '100%', maxHeight: '150px', borderRadius: '5px' }}
                 />
               </div>

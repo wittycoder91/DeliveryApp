@@ -43,10 +43,7 @@ const AppHeader = () => {
   }, [])
 
   const setDownloadInvoice = async () => {
-    console.log(newData)
-
-    const filteredData = newData.filter((item) => item.status === 3)
-    console.log('Filtered Data: ', filteredData)
+    const filteredData = newData.filter((item) => item.status === 1)
 
     if (filteredData.length > 0) {
       try {
@@ -430,7 +427,7 @@ const AppHeader = () => {
                             {row?.status === 0
                               ? 'Waiting'
                               : row?.status === 1
-                                ? 'Pending'
+                                ? 'Pending for Receiving'
                                 : row?.status === 2
                                   ? 'Received'
                                   : row?.status === 3

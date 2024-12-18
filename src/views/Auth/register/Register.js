@@ -89,7 +89,7 @@ const Register = () => {
       if (response.data.success) {
         showSuccessMsg('Registration Success')
       } else {
-        showSuccessMsg(response.data.message)
+        showErrorMsg(response.data.message)
       }
     } catch (error) {
       console.error(error)

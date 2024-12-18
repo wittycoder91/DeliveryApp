@@ -360,7 +360,7 @@ const DeliveryAdd = () => {
                   src={
                     curLogoPreview
                       ? curLogoPreview
-                      : `${process.env.REACT_APP_UPLOAD_URL}/${curImageUrl}`
+                      : `${process.env.REACT_APP_UPLOAD_URL}${curImageUrl}`
                   }
                   alt="Delivery Uploaded"
                   style={{ maxWidth: '100%', maxHeight: '150px', borderRadius: '5px' }}

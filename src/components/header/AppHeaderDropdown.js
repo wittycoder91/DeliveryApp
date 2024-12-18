@@ -35,7 +35,7 @@ const AppHeaderDropdown = () => {
         if (response.data.success && response.data.data?.length > 0) {
           const rawAvatarPath = response.data.data[0].avatarPath
           const normalizedAvatarPath = rawAvatarPath.replace(/\\/g, '/')
-          const avatarUrl = `${process.env.REACT_APP_UPLOAD_URL}/${normalizedAvatarPath}`
+          const avatarUrl = `${process.env.REACT_APP_UPLOAD_URL}${normalizedAvatarPath}`
           dispatch({ type: 'setAvatar', avatar: avatarUrl })
         }
       } catch (error) {

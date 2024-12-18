@@ -253,7 +253,7 @@ const Tables = () => {
                         {row?.status === 0
                           ? 'Waiting'
                           : row?.status === 1
-                            ? 'Pending'
+                            ? 'Pending for receiving'
                             : row?.status === 2
                               ? 'Received'
                               : 'Accepted'}
