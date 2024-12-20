@@ -11,7 +11,6 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
-  CFormLabel,
   CFormSelect,
 } from '@coreui/react'
 import axios from 'axios'
