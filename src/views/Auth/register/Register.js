@@ -282,7 +282,7 @@ const Register = () => {
                       />
                     </div>
                   )}
-                  <p className="text-body-secondary mb-2">W9 Upload File *</p>
+                  <p className="text-body-secondary mb-2">W9 Upload *</p>
                   <CInputGroup className="mb-2">
                     <CInputGroupText>
                       <CIcon icon={cilFax} />
