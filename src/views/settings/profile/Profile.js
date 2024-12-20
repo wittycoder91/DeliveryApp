@@ -306,11 +306,11 @@ const Profile = () => {
               />
             </CCol>
             <CCol xs={12}>
-              <CFormLabel>W2 File</CFormLabel>
+              <CFormLabel>W9 File</CFormLabel>
               <CCol className="d-flex justify-content-center gap-3">
                 <CFormInput
                   type="file"
-                  placeholder="W2 File"
+                  placeholder="W9 File"
                   accept="*"
                   onChange={handleW9Change}
                 />

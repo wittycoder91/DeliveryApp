@@ -411,10 +411,13 @@ const DeliveryAdd = () => {
   return (
     <CRow>
       <CCol xs={12}>
+        <CCard className="mb-3 pb-2">
+          <h3 className="px-3 pt-3">Note</h3>
+          <h5 className="px-3">{curReport}</h5>
+        </CCard>
         <CCard className="mb-4">
           <CCol>
             <h3 className="px-3 pt-3 mb-0">Delivery Information</h3>
-            <h5 className="px-3 pt-1 mb-1">{curReport}</h5>
             <CFormCheck
               label="Repeat Delivery"
               className="mx-3 mt-2"
@@ -588,7 +591,10 @@ const DeliveryAdd = () => {
                 />
                 <span>
                   By continuing, you agree that you have read our{' '}
-                  <strong onClick={() => setVisiblePrivacy(!visiblePrivacy)}>
+                  <strong
+                    onClick={() => setVisiblePrivacy(!visiblePrivacy)}
+                    className="cursor-pointer"
+                  >
                     Privacy Statement
                   </strong>
                 </span>
