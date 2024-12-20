@@ -161,65 +161,50 @@ const Register = () => {
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="User name"
+                      placeholder="User name *"
                       value={curName}
                       onChange={(e) => setCurName(e.target.value)}
                     />
                   </CInputGroup>
-                  {curName.length === 0 && (
-                    <CFormLabel className="require-field mb-2">This field is required</CFormLabel>
-                  )}
                   <CInputGroup className="mb-2">
                     <CInputGroupText>@</CInputGroupText>
                     <CFormInput
-                      placeholder="Email"
+                      placeholder="Email *"
                       type="mail"
                       value={curEmail}
                       onChange={(e) => setCurEmail(e.target.value)}
                     />
                   </CInputGroup>
-                  {curEmail.length === 0 && (
-                    <CFormLabel className="require-field mb-2">This field is required</CFormLabel>
-                  )}
                   <CInputGroup className="mb-2">
                     <CInputGroupText>
                       <CIcon icon={cilBuilding} />
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="Street Address"
+                      placeholder="Street Address *"
                       value={curAddress}
                       onChange={(e) => setCurAddress(e.target.value)}
                     />
                   </CInputGroup>
-                  {curAddress.length === 0 && (
-                    <CFormLabel className="require-field mb-2">This field is required</CFormLabel>
-                  )}
                   <CInputGroup className="mb-2">
                     <CInputGroupText>
                       <CIcon icon={cilBuilding} />
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="City"
+                      placeholder="City *"
                       value={curCity}
                       onChange={(e) => setCurCity(e.target.value)}
                     />
                   </CInputGroup>
-                  {curCity.length === 0 && (
-                    <CFormLabel className="require-field mb-2">This field is required</CFormLabel>
-                  )}
                   <CInputGroup className="mb-2">
                     <CInputGroupText>
                       <CIcon icon={cilBuilding} />
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="Province"
+                      placeholder="Province *"
                       value={curState}
                       onChange={(e) => setCurState(e.target.value)}
                     />
                   </CInputGroup>
-                  {curState.length === 0 && (
-                    <CFormLabel className="require-field mb-2">This field is required</CFormLabel>
-                  )}
                   <CInputGroup className="mb-2">
                     <CInputGroupText>
                       <CIcon icon={cilBuilding} />
@@ -230,22 +215,16 @@ const Register = () => {
                       onChange={(e) => setCurZipcode(e.target.value)}
                     />
                   </CInputGroup>
-                  {curZipcode.length === 0 && (
-                    <CFormLabel className="require-field mb-2">This field is required</CFormLabel>
-                  )}
                   <CInputGroup className="mb-2">
                     <CInputGroupText>
                       <CIcon icon={cilPhone} />
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="Phone number"
+                      placeholder="Phone number *"
                       value={curPhoneNumber}
                       onChange={(e) => setCurPhoneNumber(e.target.value)}
                     />
                   </CInputGroup>
-                  {curZipcode.length === 0 && (
-                    <CFormLabel className="require-field mb-2">This field is required</CFormLabel>
-                  )}
                   <CInputGroup className="mb-2">
                     <CInputGroupText>
                       <CIcon icon={cilLocomotive} />
@@ -259,44 +238,36 @@ const Register = () => {
                       onChange={(e) => setCurIndustry(e.target.value)}
                     />
                   </CInputGroup>
-                  {curIndustry.length === 0 && (
-                    <CFormLabel className="require-field mb-2">This field is required</CFormLabel>
-                  )}
                   <CInputGroup className="mb-2">
                     <CInputGroupText>
                       <CIcon icon={cilLockLocked} />
                     </CInputGroupText>
                     <CFormInput
                       type="password"
-                      placeholder="Password"
+                      placeholder="Password *"
                       value={curPassword}
                       onChange={(e) => setCurPassword(e.target.value)}
                     />
                   </CInputGroup>
-                  {curPassword.length === 0 && (
-                    <CFormLabel className="require-field mb-2">This field is required</CFormLabel>
-                  )}
                   <CInputGroup className="mb-2">
                     <CInputGroupText>
                       <CIcon icon={cilLockLocked} />
                     </CInputGroupText>
                     <CFormInput
                       type="password"
-                      placeholder="Repeat password"
+                      placeholder="Repeat password *"
                       value={curReenterPassword}
                       onChange={(e) => setCurReenterPassword(e.target.value)}
                     />
                   </CInputGroup>
-                  {curReenterPassword.length === 0 && (
-                    <CFormLabel className="require-field mb-2">This field is required</CFormLabel>
-                  )}
+                  <p className="text-body-secondary mb-2">Supplier Logo Upload</p>
                   <CInputGroup className="mb-2">
                     <CInputGroupText>
                       <CIcon icon={cilImage} />
                     </CInputGroupText>
                     <CFormInput
                       type="file"
-                      placeholder="Upload Supplier Logo"
+                      placeholder="Upload Supplier Logo *"
                       accept="image/*"
                       onChange={handleLogoChange}
                     />
@@ -311,13 +282,14 @@ const Register = () => {
                       />
                     </div>
                   )}
+                  <p className="text-body-secondary mb-2">W9 Upload File *</p>
                   <CInputGroup className="mb-2">
                     <CInputGroupText>
                       <CIcon icon={cilFax} />
                     </CInputGroupText>
                     <CFormInput
                       type="file"
-                      placeholder="Upload W9"
+                      placeholder="Upload W9 *"
                       accept="*"
                       onChange={handleUploadW9}
                     />
