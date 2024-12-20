@@ -210,7 +210,7 @@ const Register = () => {
                       <CIcon icon={cilBuilding} />
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="Zip Code"
+                      placeholder="Zip Code *"
                       value={curZipcode}
                       onChange={(e) => setCurZipcode(e.target.value)}
                     />
