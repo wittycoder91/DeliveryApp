@@ -2,7 +2,16 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { CButton, CCard, CCardBody, CCol, CForm, CFormInput, CFormLabel } from '@coreui/react'
+import {
+  CButton,
+  CCard,
+  CCardBody,
+  CCol,
+  CForm,
+  CFormInput,
+  CFormLabel,
+  CFormSelect,
+} from '@coreui/react'
 
 import api from 'src/services'
 import { API_URLS } from 'src/config/Constants'
@@ -22,11 +31,35 @@ const Profile = () => {
   const [curOldPwd, setCurOldPwd] = useState('')
   const [curNewPwd, setCurNewPwd] = useState('')
   const [curNewReenterPwd, setCurNewReenterPwd] = useState('')
+  const [curAllIndustry, setCurAllIndustry] = useState([])
+  const [curIndustry, setCurIndustry] = useState('')
+  const [curPhoneNumber, setCurPhoneNumber] = useState('')
+  const [curW9, setCurW9] = useState('')
+  const [curW9Data, setCurW9Data] = useState('')
 
   useEffect(() => {
+    getAllIndustry()
     getUserInformation()
   }, [])
 
+  const getAllIndustry = async () => {
+    try {
+      const response = await api.get(API_URLS.GETALLINDUSTRY)
+
+      if (response.data.success && response.data.data?.length > 0) {
+        setCurAllIndustry(response.data.data)
+        setCurIndustry(response.data.data[0]._id)
+      } else {
+        showWarningMsg(response.data.message)
+      }
+    } catch (error) {
+      if (error.response.data.msg) {
+        showErrorMsg(error.response.data.msg)
+      } else {
+        showErrorMsg(error.message)
+      }
+    }
+  }
   const getUserInformation = async () => {
     setCurImage('')
 
@@ -42,9 +75,15 @@ const Profile = () => {
         setCurCity(result?.city)
         setCurState(result?.state)
         setCurZipcode(result?.zipcode)
-        const rawAvatarPath = result?.avatarPath
-        const normalizedAvatarPath = rawAvatarPath.replace(/\\/g, '/')
-        setCurImageUrl(normalizedAvatarPath)
+        setCurPhoneNumber(result?.phonenumber)
+        setCurIndustry(result?.industry)
+        setCurW9(result?.w9Path)
+
+        if (result?.avatarPath) {
+          const rawAvatarPath = result?.avatarPath
+          const normalizedAvatarPath = rawAvatarPath.replace(/\\/g, '/')
+          setCurImageUrl(normalizedAvatarPath)
+        }
       } else {
         showWarningMsg(response.data.message)
       }
@@ -72,16 +111,17 @@ const Profile = () => {
   }
   const handleUpdate = async () => {
     if (
-      curEmail.length <= 0 ||
-      curName.length <= 0 ||
-      curAddress.length <= 0 ||
-      curCity.length <= 0 ||
-      curState.length <= 0 ||
-      curZipcode.length <= 0 ||
-      curOldPwd.length <= 0 ||
-      curNewPwd.length <= 0 ||
-      curNewReenterPwd.length <= 0 ||
-      (curImageUrl.length === 0 && curImage?.length === 0)
+      curEmail.length === 0 ||
+      curName.length === 0 ||
+      curAddress.length === 0 ||
+      curCity.length === 0 ||
+      curState.length === 0 ||
+      curZipcode.length === 0 ||
+      curOldPwd.length === 0 ||
+      curNewPwd.length === 0 ||
+      curNewReenterPwd.length === 0 ||
+      curPhoneNumber.length === 0 ||
+      (curW9.length === 0 && curW9Data.length === 0)
     ) {
       showErrorMsg('There are some missing fields')
       return
@@ -95,6 +135,8 @@ const Profile = () => {
     const formData = new FormData()
     formData.append('image', curImage)
     formData.append('imageurl', curImageUrl)
+    formData.append('w9', curW9Data)
+    formData.append('w9url', curW9)
     formData.append('name', curName)
     formData.append('email', curEmail)
     formData.append('password', curOldPwd)
@@ -103,7 +145,10 @@ const Profile = () => {
     formData.append('city', curCity)
     formData.append('state', curState)
     formData.append('zipcode', curZipcode)
+    formData.append('industry', curIndustry)
+    formData.append('phonenumber', curPhoneNumber)
     formData.append('uploadstatus', curImage ? 'true' : 'false')
+    formData.append('uploadW9Status', curW9Data ? 'true' : 'false')
     try {
       const response = await api.post(API_URLS.UPDATESELUSERINFORMATION, formData, {
         headers: {
@@ -112,8 +157,10 @@ const Profile = () => {
       })
 
       if (response.data.success && response.data.data) {
-        const avatarUrl = `${process.env.REACT_APP_UPLOAD_URL}${response.data.data?.avatarPath}`
-        dispatch({ type: 'setAvatar', avatar: avatarUrl })
+        if (curImage) {
+          const avatarUrl = `${process.env.REACT_APP_UPLOAD_URL}${response.data.data?.avatarPath}`
+          dispatch({ type: 'setAvatar', avatar: avatarUrl })
+        }
 
         localStorage.setItem('email', curEmail)
         showSuccessMsg('Your information has been updated successfully.')
@@ -122,6 +169,38 @@ const Profile = () => {
       }
     } catch (error) {
       console.error(error)
+    }
+  }
+  const handleDownload = async () => {
+    if (curW9.length > 0) {
+      const fileUrl = `${process.env.REACT_APP_UPLOAD_URL}${curW9.replace(/\\/g, '/')}`
+
+      try {
+        const response = await fetch(fileUrl)
+        if (!response.ok) {
+          throw new Error('Failed to fetch file')
+        }
+        const blob = await response.blob()
+        const blobUrl = URL.createObjectURL(blob)
+
+        const link = document.createElement('a')
+        link.href = blobUrl
+        link.download = curW9.split('\\').pop()
+        document.body.appendChild(link)
+        link.click()
+
+        URL.revokeObjectURL(blobUrl)
+        document.body.removeChild(link)
+      } catch (error) {
+        console.error('Error downloading file:', error)
+      }
+    }
+  }
+  const handleW9Change = (event) => {
+    const file = event.target.files[0]
+
+    if (file) {
+      setCurW9Data(file)
     }
   }
 
@@ -149,9 +228,9 @@ const Profile = () => {
               />
             </CCol>
             <CCol md={6}>
-              <CFormLabel>Address</CFormLabel>
+              <CFormLabel>Street Address</CFormLabel>
               <CFormInput
-                placeholder="Address"
+                placeholder="Street Address"
                 value={curAddress}
                 onChange={(e) => setCurAddress(e.target.value)}
               />
@@ -165,9 +244,9 @@ const Profile = () => {
               />
             </CCol>
             <CCol md={6}>
-              <CFormLabel>State</CFormLabel>
+              <CFormLabel>Province</CFormLabel>
               <CFormInput
-                placeholder="State"
+                placeholder="Province"
                 value={curState}
                 onChange={(e) => setCurState(e.target.value)}
               />
@@ -178,6 +257,25 @@ const Profile = () => {
                 placeholder="Zip Code"
                 value={curZipcode}
                 onChange={(e) => setCurZipcode(e.target.value)}
+              />
+            </CCol>
+            <CCol md={6}>
+              <CFormLabel>Phone Number</CFormLabel>
+              <CFormInput
+                placeholder="Phone number"
+                value={curPhoneNumber}
+                onChange={(e) => setCurPhoneNumber(e.target.value)}
+              />
+            </CCol>
+            <CCol md={6}>
+              <CFormLabel>Industry</CFormLabel>
+              <CFormSelect
+                options={curAllIndustry?.map((industry) => ({
+                  label: industry.industryName,
+                  value: industry._id,
+                }))}
+                value={curIndustry}
+                onChange={(e) => setCurIndustry(e.target.value)}
               />
             </CCol>
             <CCol xs={12}>
@@ -208,7 +306,23 @@ const Profile = () => {
               />
             </CCol>
             <CCol xs={12}>
-              <CFormLabel>Company Logo</CFormLabel>
+              <CFormLabel>W2 File</CFormLabel>
+              <CCol className="d-flex justify-content-center gap-3">
+                <CFormInput
+                  type="file"
+                  placeholder="W2 File"
+                  accept="*"
+                  onChange={handleW9Change}
+                />
+                {curW9Data.length === 0 && curW9.length > 0 && (
+                  <CButton color="primary" onClick={handleDownload}>
+                    Download
+                  </CButton>
+                )}
+              </CCol>
+            </CCol>
+            <CCol xs={12}>
+              <CFormLabel>Supplier Logo</CFormLabel>
               <CFormInput
                 type="file"
                 placeholder="Upload Company Logo"
@@ -218,7 +332,7 @@ const Profile = () => {
             </CCol>
             {(curLogoPreview || curImageUrl) && (
               <div className="mb-4 text-center">
-                <p className="text-body-secondary">Logo Preview:</p>
+                <p className="text-body-secondary">Supplier Logo Preview:</p>
                 <img
                   src={
                     curLogoPreview

@@ -12,9 +12,14 @@ import {
   CInputGroupText,
   CButton,
   CFormCheck,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
+  CModalFooter,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilImage } from '@coreui/icons'
+import { cilImage, cilFax } from '@coreui/icons'
 import { DayPicker } from 'react-day-picker'
 import 'react-day-picker/dist/style.css'
 import { ToastContainer } from 'react-toastify'
@@ -37,21 +42,36 @@ const DeliveryAdd = () => {
   const [curWeight, setCurWeight] = useState(0)
   const [curPackaging, setCurPackaging] = useState(0)
   const [curCountPackage, setCurCountPackage] = useState(0)
-  const [curResidue, setCurResidue] = useState('')
-  const [curColor, setCurColor] = useState('')
-  const [curCondition, setCurCondition] = useState('')
   const [curLogoPreview, setCurLogoPreview] = useState(null)
   const [curImage, setCurImage] = useState('')
   const [curDate, setCurDate] = useState('')
   const [curTime, setCurTime] = useState(0)
   const [curImageUrl, setCurImageUrl] = useState('')
+  const [curReport, setCurReport] = useState('')
+  const [curPrivacy, setCurPrivacy] = useState('')
+  const [curPrivacyStatus, setCurPrivacyStatus] = useState(false)
+  const [curResidue, setCurResidue] = useState('')
+  const [curAllResidues, setCurAllResidues] = useState([])
+  const [curColor, setCurColor] = useState('')
+  const [curAllColors, setCurAllColors] = useState([])
+  const [curCondition, setCurCondition] = useState('')
+  const [curAllConditions, setCurAllConditions] = useState([])
+  const [curSDSStatus, setCurSDSStatus] = useState(false)
+  const [curSDS, setCurSDS] = useState('')
+  const [curSDSUrl, setCurSDSUrl] = useState('')
+  // Privacy States
+  const [visiblePrivacy, setVisiblePrivacy] = useState(false)
 
   useEffect(() => {
     getInitialValue()
 
+    getSettings()
     getAllMaterials()
     getAllPackages()
     getAllTimes()
+    getColors()
+    getResidue()
+    getConditions()
   }, [location.pathname])
 
   const getInitialValue = () => {
@@ -72,6 +92,27 @@ const DeliveryAdd = () => {
     setCurTime(0)
     setCurDate('')
     setCurRepeatStatus(false)
+    setCurSDSStatus(false)
+    setCurSDS('')
+    setCurSDSUrl('')
+  }
+  const getSettings = async () => {
+    try {
+      const response = await api.get(API_URLS.GETSETTING)
+
+      if (response.data.success && response.data.data) {
+        setCurReport(response.data.data?.report)
+        setCurPrivacy(response.data.data?.terms)
+      } else {
+        showWarningMsg(response.data.message)
+      }
+    } catch (error) {
+      if (error.response.data.msg) {
+        showErrorMsg(error.response.data.msg)
+      } else {
+        showErrorMsg(error.message)
+      }
+    }
   }
   const getAllMaterials = async () => {
     try {
@@ -135,6 +176,63 @@ const DeliveryAdd = () => {
       }
     }
   }
+  const getColors = async () => {
+    try {
+      const response = await api.get(API_URLS.GETALLCOLOR)
+
+      if (response.data.success && response.data.data) {
+        setCurAllColors(response.data.data)
+
+        if (response.data.data?.length > 0) setCurColor(response.data.data[0]._id)
+      } else {
+        showWarningMsg(response.data.message)
+      }
+    } catch (error) {
+      if (error.response.data.msg) {
+        showErrorMsg(error.response.data.msg)
+      } else {
+        showErrorMsg(error.message)
+      }
+    }
+  }
+  const getResidue = async () => {
+    try {
+      const response = await api.get(API_URLS.GETALLRESIDUE)
+
+      if (response.data.success && response.data.data) {
+        setCurAllResidues(response.data.data)
+
+        if (response.data.data?.length > 0) setCurResidue(response.data.data[0]._id)
+      } else {
+        showWarningMsg(response.data.message)
+      }
+    } catch (error) {
+      if (error.response.data.msg) {
+        showErrorMsg(error.response.data.msg)
+      } else {
+        showErrorMsg(error.message)
+      }
+    }
+  }
+  const getConditions = async () => {
+    try {
+      const response = await api.get(API_URLS.GETALLCONDITION)
+
+      if (response.data.success && response.data.data) {
+        setCurAllConditions(response.data.data)
+
+        if (response.data.data?.length > 0) setCurCondition(response.data.data[0]._id)
+      } else {
+        showWarningMsg(response.data.message)
+      }
+    } catch (error) {
+      if (error.response.data.msg) {
+        showErrorMsg(error.response.data.msg)
+      } else {
+        showErrorMsg(error.message)
+      }
+    }
+  }
   const getRecentDelivery = async () => {
     try {
       const response = await api.get(API_URLS.LASTESTDELIVERY)
@@ -154,6 +252,12 @@ const DeliveryAdd = () => {
         const rawAvatarPath = result?.avatarPath
         const normalizedAvatarPath = rawAvatarPath.replace(/\\/g, '/')
         setCurImageUrl(normalizedAvatarPath)
+        if (result?.sdsPath.length > 0) {
+          const rawSDSPath = result?.sdsPath
+          const normalizedSDSPath = rawSDSPath.replace(/\\/g, '/')
+          setCurSDSUrl(normalizedSDSPath)
+          setCurSDSStatus(true)
+        }
       } else {
         showWarningMsg(response.data.message)
       }
@@ -166,6 +270,24 @@ const DeliveryAdd = () => {
     }
   }
 
+  const handleResidue = (e) => {
+    const selectedValue = e.target.value
+    const selectedLabel = e.target.options[e.target.selectedIndex].text
+
+    setCurResidue(selectedValue)
+    if (selectedLabel.includes('SDS')) {
+      setCurSDSStatus(true)
+    } else {
+      setCurSDSStatus(false)
+      setCurSDS('')
+      setCurSDSUrl('')
+    }
+  }
+  // Handle upload the sds file
+  const handleUploadSDS = (event) => {
+    const file = event.target.files[0]
+    setCurSDS(file)
+  }
   // Preview the upload Material Image
   const handleLogoChange = (event) => {
     const file = event.target.files[0]
@@ -180,7 +302,6 @@ const DeliveryAdd = () => {
       reader.readAsDataURL(file)
     }
   }
-
   const handleRepeat = (e) => {
     getInitialValue()
     setCurRepeatStatus(e.target.checked)
@@ -192,8 +313,12 @@ const DeliveryAdd = () => {
       if (allMaterials.length > 0) setCurMaterial(allMaterials[0]._id)
     }
   }
-
   const handleConfirm = async () => {
+    if (!curPrivacyStatus) {
+      showErrorMsg('You must check the privacy policy.')
+      return
+    }
+
     if (
       allMaterials.length <= 0 ||
       allPackages.length <= 0 ||
@@ -205,14 +330,14 @@ const DeliveryAdd = () => {
       curCountPackage < 0 ||
       isNaN(parseInt(curCountPackage)) ||
       curTime < 0 ||
-      curColor.length <= 0 ||
-      curResidue.length <= 0 ||
-      curCondition.length <= 0 ||
+      curColor.length === 0 ||
+      curResidue.length === 0 ||
+      curCondition.length === 0 ||
       (curImageUrl.length === 0 && curImage?.length === 0) ||
-      curDate.length <= 0
+      curDate.length <= 0 ||
+      (curSDSStatus && curSDS.length === 0)
     ) {
       showErrorMsg('There are some missing fields')
-
       return
     }
 
@@ -227,6 +352,9 @@ const DeliveryAdd = () => {
     formData.append('uploadstatus', curImage ? 'true' : 'false')
     formData.append('image', curImage)
     formData.append('imageurl', curImageUrl)
+    formData.append('uploadSDSStatus', curSDS ? 'true' : 'false')
+    formData.append('sds', curSDS)
+    formData.append('sdsUrl', curSDSUrl)
     formData.append('material', curMaterial)
     formData.append('weight', parseFloat(curWeight))
     formData.append('packaging', curPackaging)
@@ -254,6 +382,31 @@ const DeliveryAdd = () => {
       console.error(error)
     }
   }
+  const handleDownloadSDS = async () => {
+    if (curSDSUrl.length > 0) {
+      const fileUrl = `${process.env.REACT_APP_UPLOAD_URL}${curSDSUrl.replace(/\\/g, '/')}`
+
+      try {
+        const response = await fetch(fileUrl)
+        if (!response.ok) {
+          throw new Error('Failed to fetch file')
+        }
+        const blob = await response.blob()
+        const blobUrl = URL.createObjectURL(blob)
+
+        const link = document.createElement('a')
+        link.href = blobUrl
+        link.download = curSDSUrl.split('\\').pop()
+        document.body.appendChild(link)
+        link.click()
+
+        URL.revokeObjectURL(blobUrl)
+        document.body.removeChild(link)
+      } catch (error) {
+        console.error('Error downloading file:', error)
+      }
+    }
+  }
 
   return (
     <CRow>
@@ -261,6 +414,7 @@ const DeliveryAdd = () => {
         <CCard className="mb-4">
           <CCol>
             <h3 className="px-3 pt-3 mb-0">Delivery Information</h3>
+            <h5 className="px-3 pt-1 mb-1">{curReport}</h5>
             <CFormCheck
               label="Repeat Delivery"
               className="mx-3 mt-2"
@@ -316,43 +470,54 @@ const DeliveryAdd = () => {
             <CCol className="d-flex flex-wrap flex-md-row flex-column gap-4">
               <CCol>
                 <CFormLabel>Color</CFormLabel>
-                <CFormInput
-                  placeholder="Color"
+                <CFormSelect
+                  options={curAllColors?.map((color) => ({
+                    label: color.colorName,
+                    value: color._id,
+                  }))}
                   value={curColor}
                   onChange={(e) => setCurColor(e.target.value)}
                 />
               </CCol>
               <CCol>
                 <CFormLabel>Residue Material</CFormLabel>
-                <CFormInput
-                  placeholder="Residue"
-                  value={curResidue}
-                  onChange={(e) => setCurResidue(e.target.value)}
-                />
+                <CFormSelect value={curResidue} onChange={handleResidue}>
+                  {curAllResidues?.map((residue) => (
+                    <option key={residue._id} value={residue._id}>
+                      {residue.residueName}
+                    </option>
+                  ))}
+                </CFormSelect>
               </CCol>
             </CCol>
             <CCol className="d-flex flex-wrap flex-md-row flex-column gap-4">
               <CCol>
                 <CFormLabel>Conditions</CFormLabel>
-                <CFormInput
-                  placeholder="Conditions"
+                <CFormSelect
+                  options={curAllConditions?.map((residue) => ({
+                    label: residue.conditionName,
+                    value: residue._id,
+                  }))}
                   value={curCondition}
                   onChange={(e) => setCurCondition(e.target.value)}
                 />
               </CCol>
             </CCol>
-            <CInputGroup className="mb-4">
-              <CInputGroupText>
-                <CIcon icon={cilImage} />
-              </CInputGroupText>
-              <CFormInput
-                type="file"
-                ref={fileInputRef}
-                accept="image/*"
-                placeholder="Upload Company Logo"
-                onChange={handleLogoChange}
-              />
-            </CInputGroup>
+            <CCol>
+              <CFormLabel>Delivery Upload Image</CFormLabel>
+              <CInputGroup className="mb-2">
+                <CInputGroupText>
+                  <CIcon icon={cilImage} />
+                </CInputGroupText>
+                <CFormInput
+                  type="file"
+                  ref={fileInputRef}
+                  accept="image/*"
+                  placeholder="Upload Company Logo"
+                  onChange={handleLogoChange}
+                />
+              </CInputGroup>
+            </CCol>
             {(curLogoPreview || curImageUrl) && (
               <div className="mb-4 text-center">
                 <p className="text-body-secondary">Delivery Upload Image</p>
@@ -366,6 +531,29 @@ const DeliveryAdd = () => {
                   style={{ maxWidth: '100%', maxHeight: '150px', borderRadius: '5px' }}
                 />
               </div>
+            )}
+            {curSDSStatus && (
+              <CCol>
+                <CFormLabel>SDS sheet</CFormLabel>
+                <CCol className="d-flex gap-3 mb-2">
+                  <CInputGroup>
+                    <CInputGroupText>
+                      <CIcon icon={cilFax} />
+                    </CInputGroupText>
+                    <CFormInput
+                      type="file"
+                      placeholder="Upload SDS"
+                      accept="*"
+                      onChange={handleUploadSDS}
+                    />
+                  </CInputGroup>
+                  {curSDS.length === 0 && curSDSUrl.length > 0 && (
+                    <CButton color="primary" onClick={handleDownloadSDS}>
+                      Download
+                    </CButton>
+                  )}
+                </CCol>
+              </CCol>
             )}
             <CCol className="d-flex flex-wrap flex-md-row flex-column gap-4">
               <CCol>
@@ -392,13 +580,42 @@ const DeliveryAdd = () => {
                 />
               </CCol>
             </CCol>
-            <CCol className="d-flex justify-content-end me-4">
+            <CCol className="d-flex justify-content-end align-items-center me-4">
+              <CCol className="d-flex gap-2">
+                <CFormCheck
+                  checked={curPrivacyStatus}
+                  onChange={(e) => setCurPrivacyStatus(e.target.checked)}
+                />
+                <span>
+                  By continuing, you agree that you have read our{' '}
+                  <strong onClick={() => setVisiblePrivacy(!visiblePrivacy)}>
+                    Privacy Statement
+                  </strong>
+                </span>
+              </CCol>
               <CButton color="primary" className="wid-100 dark-blue" onClick={handleConfirm}>
                 Confirm
               </CButton>
             </CCol>
           </CCardBody>
         </CCard>
+        {/* Privacy Modal */}
+        <CModal
+          alignment="center"
+          visible={visiblePrivacy}
+          onClose={() => setVisiblePrivacy(false)}
+          aria-labelledby="VerticallyCenteredExample"
+        >
+          <CModalHeader>
+            <CModalTitle id="VerticallyCenteredExample">Privacy Statement</CModalTitle>
+          </CModalHeader>
+          <CModalBody>{curPrivacy}</CModalBody>
+          <CModalFooter>
+            <CButton color="secondary" onClick={() => setVisiblePrivacy(false)}>
+              Ok
+            </CButton>
+          </CModalFooter>
+        </CModal>
         <ToastContainer
           position="top-right"
           autoClose={5000}

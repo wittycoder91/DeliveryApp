@@ -3,6 +3,7 @@ export const API_URLS = {
   LOGIN: `${process.env.REACT_APP_API_URL}/auth/user/login`,
   REGISTER: `${process.env.REACT_APP_API_URL}/auth/user/register`,
   GETSELUSERINFOR: `${process.env.REACT_APP_API_URL}/user/get-sel-userinfor`,
+  GETALLINDUSTRY: `${process.env.REACT_APP_API_URL}/auth/admin/get-allindustry`,
   // Dashboard
   GETDASHBOARDLOYALTY: `${process.env.REACT_APP_API_URL}/dashboard/user/get-dashboard-loyalty`,
   GETDASHBOARDWIDGET: `${process.env.REACT_APP_API_URL}/dashboard/user/get-dashboard-widget`,
@@ -15,6 +16,9 @@ export const API_URLS = {
   GETALLPACKAGES: `${process.env.REACT_APP_API_URL}/setting/admin/get-allpackages`,
   GETSETTING: `${process.env.REACT_APP_API_URL}/setting/admin/get-setting`,
   GETALLUSERS: `${process.env.REACT_APP_API_URL}/setting/admin/get-allusers`,
+  GETALLCOLOR: `${process.env.REACT_APP_API_URL}/setting/admin/get-allcolors`,
+  GETALLRESIDUE: `${process.env.REACT_APP_API_URL}/setting/admin/get-all-residue-materials`,
+  GETALLCONDITION: `${process.env.REACT_APP_API_URL}/setting/admin/get-all-conditions`,
   // Delivery
   ADDDELIVERY: `${process.env.REACT_APP_API_URL}/delivery/user/add-delivery`,
   LASTESTDELIVERY: `${process.env.REACT_APP_API_URL}/delivery/user/lastest-delivery`,

@@ -39,6 +39,7 @@ const DeliveryDetail = () => {
   const [curDate, setCurDate] = useState('')
   const [curTime, setCurTime] = useState(0)
   const [curPO, setCurPO] = useState('')
+  const [curSDS, setCurSDS] = useState('')
   const [curStatus, setCurStatus] = useState('')
 
   useEffect(() => {
@@ -95,7 +96,8 @@ const DeliveryDetail = () => {
         setCurDate(response.data.data?.date)
         setCurTime(response.data.data?.time)
         setCurPO(response.data.data?.po)
-        setCurStatus(response.data.data?.status)
+        setCurSDS(response.data.data?.sdsPath)
+        setCurStatus(response.data.data?.state)
       } else {
         showWarningMsg(response.data.message)
       }
@@ -120,6 +122,7 @@ const DeliveryDetail = () => {
     setCurDate('')
     setCurTime(0)
     setCurPO('')
+    setCurSDS('')
     setCurStatus('')
   }
 
@@ -144,6 +147,29 @@ const DeliveryDetail = () => {
       }
     } catch (error) {
       console.error(error)
+    }
+  }
+  const handleDownload = async () => {
+    const fileUrl = `${process.env.REACT_APP_UPLOAD_URL}${curSDS.replace(/\\/g, '/')}`
+
+    try {
+      const response = await fetch(fileUrl)
+      if (!response.ok) {
+        throw new Error('Failed to fetch file')
+      }
+      const blob = await response.blob()
+      const blobUrl = URL.createObjectURL(blob)
+
+      const link = document.createElement('a')
+      link.href = blobUrl
+      link.download = curSDS.split('\\').pop()
+      document.body.appendChild(link)
+      link.click()
+
+      URL.revokeObjectURL(blobUrl)
+      document.body.removeChild(link)
+    } catch (error) {
+      console.error('Error downloading file:', error)
     }
   }
 
@@ -237,16 +263,26 @@ const DeliveryDetail = () => {
                   captionLayout="dropdown"
                 />
               </CCol>
-              <CCol>
-                <CFormLabel>Time</CFormLabel>
-                <CFormSelect
-                  options={allTimes?.map((time) => ({
-                    label: new Date(time * 1000).toISOString().substr(11, 8),
-                    value: time,
-                  }))}
-                  value={curTime}
-                  onChange={(e) => setCurTime(e.target.value)}
-                />
+              <CCol className="d-flex flex-column gap-3">
+                <CRow>
+                  <CFormLabel>Time</CFormLabel>
+                  <CFormSelect
+                    options={allTimes?.map((time) => ({
+                      label: new Date(time * 1000).toISOString().substr(11, 8),
+                      value: time,
+                    }))}
+                    value={curTime}
+                    onChange={(e) => setCurTime(e.target.value)}
+                  />
+                </CRow>
+                {curSDS.length > 0 && (
+                  <CRow>
+                    <CFormLabel>SDS sheet</CFormLabel>
+                    <CButton color="primary" className="w-max" onClick={handleDownload}>
+                      Download
+                    </CButton>
+                  </CRow>
+                )}
               </CCol>
             </CCol>
             <CCol className="d-flex justify-content-end gap-3 me-4">

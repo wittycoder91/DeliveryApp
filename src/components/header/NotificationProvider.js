@@ -47,7 +47,7 @@ const NotificationProvider = ({ children }) => {
 
       socket.onopen = () => {
         console.log('WebSocket connection established')
-        retryAttempts = 0 // Reset retry attempts on successful connection
+        retryAttempts = 0
       }
 
       socket.onmessage = (event) => {
@@ -73,7 +73,7 @@ const NotificationProvider = ({ children }) => {
         if (retryAttempts < 5) {
           retryAttempts++
           console.log(`Retrying connection in ${retryAttempts * 2} seconds...`)
-          setTimeout(connect, retryAttempts * 2000) // Retry with exponential backoff
+          setTimeout(connect, retryAttempts * 2000)
         } else {
           console.error('Failed to reconnect after 5 attempts')
         }
@@ -81,16 +81,16 @@ const NotificationProvider = ({ children }) => {
 
       socket.onerror = (error) => {
         console.error('WebSocket error:', error)
-        socket.close() // Close the socket on error to trigger reconnection
+        socket.close()
       }
     }
 
     connect()
 
     return () => {
-      socket.close() // Cleanup on component unmount
+      socket.close()
     }
-  }, [cookies, setCookie]) // Dependencies updated for cookies and setCookie
+  }, [cookies, setCookie])
 
   return (
     <NotificationContext.Provider
@@ -103,7 +103,7 @@ const NotificationProvider = ({ children }) => {
 
 // Add PropTypes validation
 NotificationProvider.propTypes = {
-  children: PropTypes.node.isRequired, // Validate children as a required prop
+  children: PropTypes.node.isRequired,
 }
 
 export default NotificationProvider

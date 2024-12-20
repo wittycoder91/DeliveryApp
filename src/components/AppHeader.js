@@ -1,5 +1,5 @@
 import { jsPDF } from 'jspdf'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
@@ -15,6 +15,12 @@ import {
   CRow,
   CCol,
   useColorModes,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
+  CModalFooter,
+  CButton,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilBell, cilMenu, cilMoon, cilSun, cilBabyCarriage } from '@coreui/icons'
@@ -35,6 +41,10 @@ const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
 
+  // Download BOL
+  const [visible, setVisible] = useState(false)
+  const [curFilterData, setCurFilterData] = useState([])
+
   useEffect(() => {
     document.addEventListener('scroll', () => {
       headerRef.current &&
@@ -42,52 +52,57 @@ const AppHeader = () => {
     })
   }, [])
 
-  const setDownloadInvoice = async () => {
-    const filteredData = newData.filter((item) => item.status === 1)
+  const handleDownloadConfirm = async () => {
+    try {
+      const response = await api.get(API_URLS.GETSELUSERINFOR, {
+        params: { selEmail: localStorage.getItem('email') },
+      })
 
-    if (filteredData.length > 0) {
-      try {
-        const response = await api.get(API_URLS.GETSELUSERINFOR, {
-          params: { selEmail: localStorage.getItem('email') },
-        })
+      if (response.data.success && response.data.data?.length > 0) {
+        const userData = response.data.data[0]
 
-        if (response.data.success && response.data.data?.length > 0) {
-          const userData = response.data.data[0]
+        if (userData) {
+          const userName = userData?.name
+          const userAddress = userData?.address
+          const userCity = userData?.city
+          const userState = userData?.state
+          const userZipcode = userData?.zipcode
 
-          if (userData) {
-            const userName = userData?.name
-            const userAddress = userData?.address
-            const userCity = userData?.city
-            const userState = userData?.state
-            const userZipcode = userData?.zipcode
+          for (let i = 0; i < curFilterData.length; i++) {
+            const selData = curFilterData[i]
+            const selPO = selData?.po
+            const selWegiht = selData?.weight
 
-            for (let i = 0; i < filteredData.length; i++) {
-              const selData = filteredData[i]
-              const selPO = selData?.po
-              const selWegiht = selData?.weight
-
-              downloadInvoicePDF(
-                userName,
-                userAddress,
-                userCity,
-                userState,
-                userZipcode,
-                selPO,
-                selWegiht,
-              )
-            }
+            downloadInvoicePDF(
+              userName,
+              userAddress,
+              userCity,
+              userState,
+              userZipcode,
+              selPO,
+              selWegiht,
+            )
           }
         }
-      } catch (error) {
-        if (error.response?.data?.msg) {
-          showErrorMsg(error.response.data.msg)
-        } else {
-          showErrorMsg(error.message)
-        }
+        setVisible(false)
+      }
+    } catch (error) {
+      if (error.response?.data?.msg) {
+        showErrorMsg(error.response.data.msg)
+      } else {
+        showErrorMsg(error.message)
       }
     }
   }
+  const setDownloadInvoice = () => {
+    setCurFilterData([])
+    const filteredData = newData.filter((item) => item.status === 1)
 
+    if (filteredData.length > 0) {
+      setCurFilterData(filteredData)
+      setVisible(!visible)
+    }
+  }
   const handleGoToDelivery = (selStatus) => {
     setDownloadInvoice()
 
@@ -102,7 +117,6 @@ const AppHeader = () => {
       navigate('/data/delivery')
     }
   }
-
   const handleGoToMore = () => {
     setDownloadInvoice()
 
@@ -496,6 +510,25 @@ const AppHeader = () => {
           <AppHeaderDropdown />
         </CHeaderNav>
       </CContainer>
+      <CModal
+        alignment="center"
+        visible={visible}
+        onClose={() => setVisible(false)}
+        aria-labelledby="VerticallyCenteredExample"
+      >
+        <CModalHeader>
+          <CModalTitle id="VerticallyCenteredExample">BOL Information</CModalTitle>
+        </CModalHeader>
+        <CModalBody>Do you want to download the BOL template?</CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setVisible(false)}>
+            No
+          </CButton>
+          <CButton color="primary" onClick={handleDownloadConfirm}>
+            Yes
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </CHeader>
   )
 }

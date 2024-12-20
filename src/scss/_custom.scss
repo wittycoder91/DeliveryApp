@@ -84,3 +84,37 @@ th {
   height: 300px !important;
   object-fit: contain;
 }
+
+.require-field {
+  font-size: 14px;
+  color: red !important;
+}
+
+.register-card {
+  max-height: 800px;
+  overflow: auto;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: white;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #bcd2db;
+  opacity: 0.3;
+  border-radius: 100px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #bcd2db;
+  opacity: 0.3;
+}
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #bcd2db white;
+}
+.custom-scrollbar:hover {
+  scrollbar-color: #bcd2db #ffffff;
+}
