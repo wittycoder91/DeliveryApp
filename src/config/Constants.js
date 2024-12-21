@@ -19,6 +19,7 @@ export const API_URLS = {
   GETALLCOLOR: `${process.env.REACT_APP_API_URL}/setting/admin/get-allcolors`,
   GETALLRESIDUE: `${process.env.REACT_APP_API_URL}/setting/admin/get-all-residue-materials`,
   GETALLCONDITION: `${process.env.REACT_APP_API_URL}/setting/admin/get-all-conditions`,
+  GETALLFAQS: `${process.env.REACT_APP_API_URL}/setting/admin/get-all-faq`,
   // Delivery
   ADDDELIVERY: `${process.env.REACT_APP_API_URL}/delivery/user/add-delivery`,
   LASTESTDELIVERY: `${process.env.REACT_APP_API_URL}/delivery/user/lastest-delivery`,

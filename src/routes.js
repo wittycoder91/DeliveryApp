@@ -11,6 +11,7 @@ const DeliverylogDetail = React.lazy(() => import('./views/data/deliverylogs/Del
 
 // Settings
 const Profile = React.lazy(() => import('./views/settings/profile/Profile'))
+const FAQ = React.lazy(() => import('./views/settings/faq/FAQ'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -23,6 +24,7 @@ const routes = [
   { path: '/data/deliverylogdetail/:id', name: 'DeliveryLogDetail', element: DeliverylogDetail },
   { path: '/setting', name: 'Setting', element: Profile, exact: true },
   { path: '/setting/setting', name: 'Profile', element: Profile },
+  { path: '/setting/faq', name: 'FAQ', element: FAQ },
 ]
 
 export default routes

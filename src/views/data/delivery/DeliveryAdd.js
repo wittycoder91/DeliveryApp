@@ -59,6 +59,8 @@ const DeliveryAdd = () => {
   const [curSDSStatus, setCurSDSStatus] = useState(false)
   const [curSDS, setCurSDS] = useState('')
   const [curSDSUrl, setCurSDSUrl] = useState('')
+  const [curOther, setCurOther] = useState('')
+  const [curOtherStats, setCurOtherStatus] = useState(false)
   // Privacy States
   const [visiblePrivacy, setVisiblePrivacy] = useState(false)
 
@@ -95,6 +97,8 @@ const DeliveryAdd = () => {
     setCurSDSStatus(false)
     setCurSDS('')
     setCurSDSUrl('')
+    setCurOtherStatus(false)
+    setCurOther('')
   }
   const getSettings = async () => {
     try {
@@ -258,6 +262,10 @@ const DeliveryAdd = () => {
           setCurSDSUrl(normalizedSDSPath)
           setCurSDSStatus(true)
         }
+        if (result?.other?.length > 0) {
+          setCurOtherStatus(true)
+          setCurOther(result.other)
+        }
       } else {
         showWarningMsg(response.data.message)
       }
@@ -277,7 +285,10 @@ const DeliveryAdd = () => {
     setCurResidue(selectedValue)
     if (selectedLabel.includes('SDS')) {
       setCurSDSStatus(true)
+    } else if (selectedLabel.includes('Other')) {
+      setCurOtherStatus(true)
     } else {
+      setCurOtherStatus(false)
       setCurSDSStatus(false)
       setCurSDS('')
       setCurSDSUrl('')
@@ -335,7 +346,8 @@ const DeliveryAdd = () => {
       curCondition.length === 0 ||
       (curImageUrl.length === 0 && curImage?.length === 0) ||
       curDate.length <= 0 ||
-      (curSDSStatus && curSDS.length === 0)
+      (curSDSStatus && curSDS.length === 0) ||
+      (curOtherStats && curOther.length === 0)
     ) {
       showErrorMsg('There are some missing fields')
       return
@@ -364,6 +376,7 @@ const DeliveryAdd = () => {
     formData.append('condition', curCondition)
     formData.append('date', updateDate)
     formData.append('time', curTime)
+    formData.append('other', curOther)
     try {
       const response = await api.post(API_URLS.ADDDELIVERY, formData, {
         headers: {
@@ -439,9 +452,9 @@ const DeliveryAdd = () => {
                 />
               </CCol>
               <CCol>
-                <CFormLabel>Weight(lbs)</CFormLabel>
+                <CFormLabel>Estimated Weight (LBS)</CFormLabel>
                 <CFormInput
-                  placeholder="Weight(lbs)"
+                  placeholder="Estimated Weight (LBS)"
                   value={curWeight}
                   type="number"
                   onChange={(e) => setCurWeight(e.target.value)}
@@ -461,9 +474,9 @@ const DeliveryAdd = () => {
                 />
               </CCol>
               <CCol>
-                <CFormLabel>The Total of packages</CFormLabel>
+                <CFormLabel>Estimated # of Packages</CFormLabel>
                 <CFormInput
-                  placeholder="The Total of packages"
+                  placeholder="Estimated # of Packages"
                   value={curCountPackage}
                   type="number"
                   onChange={(e) => setCurCountPackage(e.target.value)}
@@ -493,6 +506,16 @@ const DeliveryAdd = () => {
                 </CFormSelect>
               </CCol>
             </CCol>
+            {curOtherStats && (
+              <CCol>
+                <CFormLabel>Other</CFormLabel>
+                <CFormInput
+                  placeholder="Other"
+                  value={curOther}
+                  onChange={(e) => setCurOther(e.target.value)}
+                />
+              </CCol>
+            )}
             <CCol className="d-flex flex-wrap flex-md-row flex-column gap-4">
               <CCol>
                 <CFormLabel>Conditions</CFormLabel>
@@ -590,12 +613,12 @@ const DeliveryAdd = () => {
                   onChange={(e) => setCurPrivacyStatus(e.target.checked)}
                 />
                 <span>
-                  By continuing, you agree that you have read our{' '}
+                  By continuing, you have read and agree the{' '}
                   <strong
                     onClick={() => setVisiblePrivacy(!visiblePrivacy)}
                     className="cursor-pointer"
                   >
-                    Privacy Statement
+                    terms and conditions.
                   </strong>
                 </span>
               </CCol>

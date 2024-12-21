@@ -6,6 +6,7 @@ import {
   cilFactory,
   cilBabyCarriage,
   cilMedicalCross,
+  cilApplications,
 } from '@coreui/icons'
 import { CNavItem, CNavTitle } from '@coreui/react'
 
@@ -22,13 +23,13 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Add Delivery',
+    name: 'Request Delivery',
     to: '/data/adddelivery',
     icon: <CIcon icon={cilMedicalCross} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Delivery',
+    name: 'Pending Deliveries',
     to: '/data/delivery',
     icon: <CIcon icon={cilBabyCarriage} customClassName="nav-icon" />,
   },
@@ -47,6 +48,12 @@ const _nav = [
     name: 'Setting',
     to: '/setting/setting',
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'FAQ',
+    to: '/setting/faq',
+    icon: <CIcon icon={cilApplications} customClassName="nav-icon" />,
   },
 ]
 

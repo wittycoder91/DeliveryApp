@@ -65,7 +65,7 @@ const WidgetsDropdown = (props) => {
         <CWidgetStatsA
           color="primary"
           value={curTotalWeight + ' LBS'}
-          title="Total Weight"
+          title="Total Estimated Weight"
           chart={
             <CChartLine
               ref={widgetChartRef1}

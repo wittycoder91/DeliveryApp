@@ -24,9 +24,10 @@ import {
   CFormInput,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilSearch } from '@coreui/icons'
+import { cilSearch, cilArrowThickBottom } from '@coreui/icons'
 
 import api from 'src/services'
+import { downloadInvoicePDF } from 'src/config/common'
 import { API_URLS } from 'src/config/Constants'
 import { showWarningMsg, showErrorMsg } from 'src/config/common'
 import { useNotification } from 'src/components/header/NotificationProvider'
@@ -36,14 +37,15 @@ const Tables = () => {
     'No',
     'PO #',
     'Material',
-    'Weight',
+    'Estimated Weight',
     'Packaging',
-    'The Total of packages',
+    'Estimated # of Packages',
     'Residue Material',
     'Color',
     'Conditions',
     'Send Date',
     'Time',
+    'BOL',
     'Status',
   ]
 
@@ -57,10 +59,17 @@ const Tables = () => {
   const [allMaterials, setAllMaterials] = useState([])
   const [curPackage, setCurPackage] = useState(0)
   const [allPackages, setAllPackages] = useState([])
+  // Get User States
+  const [curName, setCurName] = useState('')
+  const [curAddress, setCurAddress] = useState('')
+  const [curCity, setCurCity] = useState('')
+  const [curState, setCurState] = useState('')
+  const [curZipcode, setCurZipcode] = useState('')
 
   useEffect(() => {
     getAllMaterials()
     getAllPackages()
+    getUserInformation()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -144,12 +153,40 @@ const Tables = () => {
       }
     }
   }
+  const getUserInformation = async () => {
+    try {
+      const response = await api.get(API_URLS.GETSELUSERINFOR, {
+        params: { selEmail: localStorage.getItem('email') },
+      })
+
+      if (response.data.success && response.data.data?.length > 0) {
+        const userData = response.data.data[0]
+
+        if (userData) {
+          setCurName(userData?.name)
+          setCurAddress(userData?.address)
+          setCurCity(userData?.city)
+          setCurState(userData?.state)
+          setCurZipcode(userData?.zipcode)
+        }
+      }
+    } catch (error) {
+      if (error.response?.data?.msg) {
+        showErrorMsg(error.response.data.msg)
+      } else {
+        showErrorMsg(error.message)
+      }
+    }
+  }
 
   const handleSearch = () => {
     getDelivery(curMaterial, curPackage, curSearh)
   }
   const handleGotoDetail = (selId) => {
     navigate(`/data/deliverydetail/${selId}`)
+  }
+  const handleDownLoadBOL = (weight, po) => {
+    downloadInvoicePDF(curName, curAddress, curCity, curState, curZipcode, po, weight)
   }
 
   return (
@@ -242,12 +279,25 @@ const Tables = () => {
                       <CTableDataCell className="text-center">{row?.weight}</CTableDataCell>
                       <CTableDataCell className="text-center">{row?.packageName}</CTableDataCell>
                       <CTableDataCell className="text-center">{row?.countpackage}</CTableDataCell>
-                      <CTableDataCell className="text-center">{row?.residueName}</CTableDataCell>
+                      <CTableDataCell className="text-center">
+                        {row?.residueName === 'Other' ? row?.other : row?.residueName}
+                      </CTableDataCell>
                       <CTableDataCell className="text-center">{row?.colorName}</CTableDataCell>
                       <CTableDataCell className="text-center">{row?.conditionName}</CTableDataCell>
                       <CTableDataCell className="text-center">{row?.date}</CTableDataCell>
                       <CTableDataCell className="text-center">
                         {new Date(row?.time * 1000).toISOString().substr(11, 8)}
+                      </CTableDataCell>
+                      <CTableDataCell className="text-center">
+                        {row?.status > 0 && (
+                          <CIcon
+                            icon={cilArrowThickBottom}
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              handleDownLoadBOL(row?.weight, row?.po)
+                            }}
+                          />
+                        )}
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
                         {row?.status === 0
@@ -262,7 +312,7 @@ const Tables = () => {
                   ))
                 ) : (
                   <CTableRow>
-                    <CTableDataCell colSpan={12} className="text-center">
+                    <CTableDataCell colSpan={13} className="text-center">
                       There is no result
                     </CTableDataCell>
                   </CTableRow>

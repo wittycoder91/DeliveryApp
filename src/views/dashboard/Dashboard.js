@@ -176,7 +176,7 @@ const Dashboard = () => {
         </CCol>
         <CCol md={6}>
           <CCard className="mb-4">
-            <h3 className="px-4 pt-3">Weight Chart</h3>
+            <h3 className="px-4 pt-3">Estimated Weight Chart</h3>
             <CCardBody>
               <CChartLine data={weightData} labels="months" />
             </CCardBody>

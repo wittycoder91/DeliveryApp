@@ -21,10 +21,11 @@ import {
   CFormLabel,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilSearch } from '@coreui/icons'
+import { cilSearch, cilArrowThickBottom } from '@coreui/icons'
 
 import api from 'src/services'
 import { API_URLS } from 'src/config/Constants'
+import { downloadReportPDF } from 'src/config/common'
 import { useNotification } from 'src/components/header/NotificationProvider'
 import { showWarningMsg, showErrorMsg } from 'src/config/common'
 
@@ -33,11 +34,11 @@ const Tables = () => {
     'No',
     'PO #',
     'Material',
-    'Weight',
+    'Estimated Weight',
     'Tare Weight',
     'Net Weight',
     'Packaging',
-    'The Total of packages',
+    'Estimated # of Packages',
     'Residue Material',
     'Color',
     'Conditions',
@@ -46,6 +47,7 @@ const Tables = () => {
     'Status',
     'Quality grade',
     'Inspection',
+    'Report',
   ]
 
   const navigate = useNavigate()
@@ -206,6 +208,9 @@ const Tables = () => {
   const handleGotoDetail = (selId) => {
     navigate(`/data/deliverylogdetail/${selId}`)
   }
+  const handleDownLoadBOL = (po, weight, tareweight, netweight, pkgcount, inspection) => {
+    downloadReportPDF(po, weight, tareweight, netweight, pkgcount, inspection)
+  }
 
   return (
     <CCol xs={12}>
@@ -284,7 +289,9 @@ const Tables = () => {
                       <CTableDataCell className="text-center">{row?.netamount}</CTableDataCell>
                       <CTableDataCell className="text-center">{row?.packageName}</CTableDataCell>
                       <CTableDataCell className="text-center">{row?.countpackage}</CTableDataCell>
-                      <CTableDataCell className="text-center">{row?.residueName}</CTableDataCell>
+                      <CTableDataCell className="text-center">
+                        {row?.residueName === 'Other' ? row?.other : row?.residueName}
+                      </CTableDataCell>
                       <CTableDataCell className="text-center">{row?.colorName}</CTableDataCell>
                       <CTableDataCell className="text-center">{row?.conditionName}</CTableDataCell>
                       <CTableDataCell className="text-center">{row?.date}</CTableDataCell>
@@ -296,11 +303,29 @@ const Tables = () => {
                       </CTableDataCell>
                       <CTableDataCell className="text-center">{row?.qualityName}</CTableDataCell>
                       <CTableDataCell className="text-center">{row?.insepction}</CTableDataCell>
+                      <CTableDataCell className="text-center">
+                        {row?.status > 0 && (
+                          <CIcon
+                            icon={cilArrowThickBottom}
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              handleDownLoadBOL(
+                                row?.po,
+                                row?.weight,
+                                row?.tareamount,
+                                row?.netamount,
+                                row?.countpackage,
+                                row?.insepction,
+                              )
+                            }}
+                          />
+                        )}
+                      </CTableDataCell>
                     </CTableRow>
                   ))
                 ) : (
                   <CTableRow>
-                    <CTableDataCell colSpan={13} className="text-center">
+                    <CTableDataCell colSpan={17} className="text-center">
                       There is no result
                     </CTableDataCell>
                   </CTableRow>

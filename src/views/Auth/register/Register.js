@@ -45,7 +45,7 @@ const Register = () => {
   const [curZipcode, setCurZipcode] = useState('')
   const [curPhoneNumber, setCurPhoneNumber] = useState('')
   const [curAllIndustry, setCurAllIndustry] = useState([])
-  const [curIndustry, setCurIndustry] = useState('')
+  const [curIndustry, setCurIndustry] = useState('-1')
   const [curW9, setCurW9] = useState('')
 
   useEffect(() => {
@@ -57,8 +57,16 @@ const Register = () => {
       const response = await api.get(API_URLS.GETALLINDUSTRY)
 
       if (response.data.success && response.data.data?.length > 0) {
-        setCurAllIndustry(response.data.data)
-        setCurIndustry(response.data.data[0]._id)
+        const updatedIndustries = [
+          {
+            _id: '-1',
+            industryName: 'Industry',
+            industryDesc: '',
+            note: '',
+          },
+          ...response.data.data,
+        ]
+        setCurAllIndustry(updatedIndustries)
       } else {
         showWarningMsg(response.data.message)
       }
@@ -100,7 +108,7 @@ const Register = () => {
       curState?.length === 0 ||
       curZipcode?.length === 0 ||
       curPhoneNumber.length === 0 ||
-      curIndustry.length === 0 ||
+      curIndustry === '-1' ||
       !curW9
     ) {
       showErrorMsg('There are some missing fields')
