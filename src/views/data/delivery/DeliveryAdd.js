@@ -285,8 +285,12 @@ const DeliveryAdd = () => {
     setCurResidue(selectedValue)
     if (selectedLabel.includes('SDS')) {
       setCurSDSStatus(true)
+      setCurOtherStatus(false)
     } else if (selectedLabel.includes('Other')) {
       setCurOtherStatus(true)
+      setCurSDSStatus(false)
+      setCurSDS('')
+      setCurSDSUrl('')
     } else {
       setCurOtherStatus(false)
       setCurSDSStatus(false)
