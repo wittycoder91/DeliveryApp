@@ -430,3 +430,142 @@ export const downloadReportPDF = async (
     doc.save(newFilename)
   }
 }
+
+export const downloadPOPDF = async (
+  curName,
+  curAddress,
+  curCity,
+  curState,
+  curZipcode,
+  curContact,
+  curPhone,
+  curReport,
+  po,
+  weight,
+  price,
+  date,
+) => {
+  const doc = new jsPDF('p', 'pt', 'a4')
+  let currentY = 50
+  const pageWidth = doc.internal.pageSize.getWidth()
+
+  // Add Logo
+  const logoUrl = await loadImageAsDataURL('/logo.jpg')
+  const logoWidth = 180
+  const logoHeight = 50
+  doc.addImage(logoUrl, 'JPEG', 50, currentY, logoWidth, logoHeight)
+
+  // Title
+  currentY += logoHeight / 2 + 10
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(17)
+  doc.text('PHRCHASE ORDER', pageWidth / 2 + 100, currentY, { align: 'center' })
+
+  currentY += 40 // Height of the gray box
+  const boxMargin = 30
+
+  // Draw a gray box background
+  doc.setFillColor(200)
+  doc.rect(boxMargin, currentY - 10, pageWidth - boxMargin * 2, 110, 'F')
+  // Left Section: Purchase Order Details
+  const leftX = boxMargin + 20
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(14)
+  doc.text(`Purchase Order No.: ${po}`, leftX, currentY + 10)
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(12)
+  const currentDate = new Date()
+  const formattedDate = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`
+  doc.text(`Issue Date: ${formattedDate}`, leftX, currentY + 30)
+  doc.text('Valid for: 30 Days', leftX, currentY + 45)
+  doc.text('FOB Point: Bellefontaine, OH', leftX, currentY + 60)
+  doc.text('Zip Code: 43311', leftX, currentY + 75)
+  doc.text(`Deliver Date: ${date}`, leftX, currentY + 90)
+  // Right Section: Vendor Details
+  const rightX = pageWidth / 2 + 15
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(14)
+  doc.text('TO VENDOR:', rightX, currentY + 10)
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(16)
+  doc.text(curName, rightX, currentY + 30)
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(12)
+  doc.text(`Contact: ${curContact}`, rightX, currentY + 45)
+  doc.text(curAddress, rightX, currentY + 60)
+  doc.text(`${curCity} ${curState} ${curZipcode}`, rightX, currentY + 75)
+  doc.text(`Tel: ${curPhone}`, rightX, currentY + 90)
+
+  // Bill & Deliver
+  currentY += 120
+  // Left Section - > Bill
+  doc.setFont('helvetica', 'bold')
+  doc.text('BILL TO:', 30, currentY + 10)
+  doc.setFontSize(14)
+  doc.text('Arch Polymers Inc.', 30, currentY + 25)
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(12)
+  doc.text('300 Progress Way', 30, currentY + 40)
+  doc.text('Bellefontaine, OH 43311', 30, currentY + 55)
+  doc.setFont('helvetica', 'bold')
+  doc.text('accounting@archpolymers.com', 30, currentY + 115)
+  // Right Seciton -> Delivery
+  doc.setFont('helvetica', 'bold')
+  doc.text('DELIVER TO:', rightX, currentY + 10)
+  doc.setFontSize(14)
+  doc.text('Arch Polymers Inc.', rightX, currentY + 25)
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(12)
+  doc.text('300 Progress Way', rightX, currentY + 40)
+  doc.text('Bellefontaine, OH 43311', rightX, currentY + 55)
+  doc.text('Contact: Howard Wei', rightX, currentY + 70)
+  doc.text('Tel: 614-615-1015', rightX, currentY + 85)
+  doc.setFont('helvetica', 'bold')
+  doc.text('howard@archpolymers.com', rightX, currentY + 100)
+  doc.text('Receiving Hours: 8:00-15:30 M-F', rightX, currentY + 115)
+
+  //Table data
+  currentY += 130
+  doc.setFillColor(0, 0, 0)
+  doc.rect(30, currentY, pageWidth - 60, 1)
+  doc.rect(30, currentY + 2, pageWidth - 60, 1)
+  doc.text('QTY', 30, currentY + 20)
+  doc.text('ITEM DESCRIPTION', 100, currentY + 20)
+  doc.text('PRICE', 312, currentY + 20)
+  doc.text('TOTAL', 370, currentY + 20)
+  doc.text('PAYMENT TERMS', 440, currentY + 20)
+  doc.rect(30, currentY + 25, pageWidth - 60, 1)
+  currentY += 25
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(10)
+  doc.text(`${weight} LBS`, 30, currentY + 10)
+  doc.text('PP SUPERSACKS; CLEAN', 100, currentY + 10)
+  doc.text(`${price}/LB`, 312, currentY + 10)
+  doc.text(parseFloat(weight * price).toFixed(2), 370, currentY + 10)
+  doc.text('NET 60 DAYS', 440, currentY + 10)
+  doc.rect(30, currentY + 50, pageWidth - 60, 1)
+
+  // Remarks
+  currentY += 70
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(12)
+  doc.text('REMARKS:', 30, currentY + 10)
+  doc.setFont('helvetica', 'normal')
+  doc.text(curReport, 30, currentY + 25, { maxWidth: 500, align: 'left' })
+
+  // Signature
+  currentY += 300
+  // Left Section
+  doc.line(110, currentY, 260, currentY)
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(11)
+  doc.text('VENDOR', 165, currentY + 15)
+  // Right Section
+  doc.line(350, currentY, 500, currentY)
+  doc.text('For and on behalf of', 360, currentY + 15)
+  doc.text('ARCH POLYMERS INC', 360, currentY + 30)
+
+  const timestampMs = Date.now()
+  const newFilename = `po_${timestampMs}.pdf`
+  doc.save(newFilename)
+}

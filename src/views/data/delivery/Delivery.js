@@ -27,7 +27,7 @@ import CIcon from '@coreui/icons-react'
 import { cilSearch, cilArrowThickBottom } from '@coreui/icons'
 
 import api from 'src/services'
-import { downloadInvoicePDF } from 'src/config/common'
+import { downloadInvoicePDF, downloadPOPDF } from 'src/config/common'
 import { API_URLS } from 'src/config/Constants'
 import { showWarningMsg, showErrorMsg } from 'src/config/common'
 import { useNotification } from 'src/components/header/NotificationProvider'
@@ -46,6 +46,7 @@ const Tables = () => {
     'Send Date',
     'Time',
     'BOL',
+    'PO',
     'Status',
   ]
 
@@ -65,11 +66,15 @@ const Tables = () => {
   const [curCity, setCurCity] = useState('')
   const [curState, setCurState] = useState('')
   const [curZipcode, setCurZipcode] = useState('')
+  const [curContact, setCurContact] = useState('')
+  const [curPhone, setCurPhone] = useState('')
+  const [curReport, setCurReport] = useState('')
 
   useEffect(() => {
     getAllMaterials()
     getAllPackages()
     getUserInformation()
+    getSettings()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -168,10 +173,29 @@ const Tables = () => {
           setCurCity(userData?.city)
           setCurState(userData?.state)
           setCurZipcode(userData?.zipcode)
+          setCurContact(userData?.contact)
+          setCurPhone(userData?.phonenumber)
         }
       }
     } catch (error) {
       if (error.response?.data?.msg) {
+        showErrorMsg(error.response.data.msg)
+      } else {
+        showErrorMsg(error.message)
+      }
+    }
+  }
+  const getSettings = async () => {
+    try {
+      const response = await api.get(API_URLS.GETSETTING)
+
+      if (response.data.success && response.data.data) {
+        setCurReport(response.data.data?.report)
+      } else {
+        showWarningMsg(response.data.message)
+      }
+    } catch (error) {
+      if (error.response.data.msg) {
         showErrorMsg(error.response.data.msg)
       } else {
         showErrorMsg(error.message)
@@ -187,6 +211,22 @@ const Tables = () => {
   }
   const handleDownLoadBOL = (weight, po) => {
     downloadInvoicePDF(curName, curAddress, curCity, curState, curZipcode, po, weight)
+  }
+  const handleDownLoadPO = (weight, po, price, date) => {
+    downloadPOPDF(
+      curName,
+      curAddress,
+      curCity,
+      curState,
+      curZipcode,
+      curContact,
+      curPhone,
+      curReport,
+      po,
+      weight,
+      price,
+      date,
+    )
   }
 
   return (
@@ -295,6 +335,17 @@ const Tables = () => {
                             onClick={(event) => {
                               event.stopPropagation()
                               handleDownLoadBOL(row?.weight, row?.po)
+                            }}
+                          />
+                        )}
+                      </CTableDataCell>
+                      <CTableDataCell className="text-center">
+                        {row?.status > 0 && (
+                          <CIcon
+                            icon={cilArrowThickBottom}
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              handleDownLoadPO(row?.weight, row?.po, row?.price, row?.date)
                             }}
                           />
                         )}

@@ -47,6 +47,7 @@ const Register = () => {
   const [curAllIndustry, setCurAllIndustry] = useState([])
   const [curIndustry, setCurIndustry] = useState('-1')
   const [curW9, setCurW9] = useState('')
+  const [curContact, setCurContact] = useState('')
 
   useEffect(() => {
     getAllIndustry()
@@ -126,6 +127,7 @@ const Register = () => {
     formData.append('image', curImage)
     formData.append('w9', curW9)
     formData.append('name', curName)
+    formData.append('contact', curContact)
     formData.append('email', curEmail)
     formData.append('password', curPassword)
     formData.append('address', curAddress)
@@ -180,6 +182,16 @@ const Register = () => {
                       type="mail"
                       value={curEmail}
                       onChange={(e) => setCurEmail(e.target.value)}
+                    />
+                  </CInputGroup>
+                  <CInputGroup className="mb-2">
+                    <CInputGroupText>
+                      <CIcon icon={cilUser} />
+                    </CInputGroupText>
+                    <CFormInput
+                      placeholder="Contact"
+                      value={curContact}
+                      onChange={(e) => setCurContact(e.target.value)}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-2">
