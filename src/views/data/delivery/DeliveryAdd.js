@@ -500,28 +500,6 @@ const DeliveryAdd = () => {
                 />
               </CCol>
               <CCol>
-                <CFormLabel>Residue Material</CFormLabel>
-                <CFormSelect value={curResidue} onChange={handleResidue}>
-                  {curAllResidues?.map((residue) => (
-                    <option key={residue._id} value={residue._id}>
-                      {residue.residueName}
-                    </option>
-                  ))}
-                </CFormSelect>
-              </CCol>
-            </CCol>
-            {curOtherStats && (
-              <CCol>
-                <CFormLabel>Other</CFormLabel>
-                <CFormInput
-                  placeholder="Other"
-                  value={curOther}
-                  onChange={(e) => setCurOther(e.target.value)}
-                />
-              </CCol>
-            )}
-            <CCol className="d-flex flex-wrap flex-md-row flex-column gap-4">
-              <CCol>
                 <CFormLabel>Conditions</CFormLabel>
                 <CFormSelect
                   options={curAllConditions?.map((residue) => ({
@@ -532,6 +510,28 @@ const DeliveryAdd = () => {
                   onChange={(e) => setCurCondition(e.target.value)}
                 />
               </CCol>
+            </CCol>
+            <CCol className="d-flex flex-wrap flex-md-row flex-column gap-4">
+              <CCol>
+                <CFormLabel>Residue Material</CFormLabel>
+                <CFormSelect value={curResidue} onChange={handleResidue}>
+                  {curAllResidues?.map((residue) => (
+                    <option key={residue._id} value={residue._id}>
+                      {residue.residueName}
+                    </option>
+                  ))}
+                </CFormSelect>
+              </CCol>
+              {curOtherStats && (
+                <CCol>
+                  <CFormLabel>Other</CFormLabel>
+                  <CFormInput
+                    placeholder="Other"
+                    value={curOther}
+                    onChange={(e) => setCurOther(e.target.value)}
+                  />
+                </CCol>
+              )}
             </CCol>
             <CCol>
               <CFormLabel>Delivery Upload Image</CFormLabel>

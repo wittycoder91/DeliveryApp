@@ -315,10 +315,15 @@ export const downloadReportPDF = async (
   netWeight,
   pkgCount,
   inspectionResults,
+  quality,
+  packageName,
+  feedback,
+  feedbackImage,
 ) => {
   const doc = new jsPDF('p', 'pt', 'a4')
   let currentY = 50
   const pageWidth = doc.internal.pageSize.getWidth()
+  const pageHeight = doc.internal.pageSize.getHeight()
 
   // Add Logo
   const logoUrl = await loadImageAsDataURL('/logo.jpg')
@@ -345,18 +350,83 @@ export const downloadReportPDF = async (
     { label: 'Tare Weight', value: `${tareWeight} lbs` },
     { label: 'Net Weight', value: `${netWeight} lbs` },
     { label: '# of Packages', value: pkgCount },
-    { label: 'Delivery Date', value: formattedDate },
+    { label: 'Package Name', value: packageName },
     { label: 'Inspection Results', value: inspectionResults },
+    { label: 'Delivery Date', value: formattedDate },
+    { label: 'Quality grade', value: quality },
   ]
 
+  // Render each row of the report
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(12)
   reportData.forEach((item) => {
     const text = `${item.label}: ${item.value}`
-    doc.text(text, pageWidth / 2, currentY, { align: 'center' })
+    doc.text(text, 50, currentY, { align: 'left' })
     currentY += 20
   })
 
-  // Generate the PDF File
-  const timestampMs = Date.now()
-  const newFilename = `receiving_report_${timestampMs}.pdf`
-  doc.save(newFilename)
+  // Add delivery feedback
+  doc.setFont('helvetica', 'bold')
+  doc.text('Delivery Feedback:', 50, currentY)
+  currentY += 20
+
+  doc.setFont('helvetica', 'normal')
+  const wrapText = (doc, text, x, y, maxWidth, lineHeight) => {
+    const words = text.split(' ')
+    let line = ''
+    let lines = []
+    for (let i = 0; i < words.length; i++) {
+      const testLine = `${line}${words[i]} `
+      const testWidth = doc.getTextWidth(testLine)
+      if (testWidth > maxWidth && i > 0) {
+        lines.push(line)
+        line = `${words[i]} `
+      } else {
+        line = testLine
+      }
+    }
+    lines.push(line)
+    for (const l of lines) {
+      doc.text(l.trim(), x, y)
+      y += lineHeight
+    }
+    return y
+  }
+  currentY = wrapText(doc, feedback, 50, currentY, pageWidth - 100, 16)
+
+  if (feedbackImage) {
+    const feebackUpdateUrl = `${process.env.REACT_APP_UPLOAD_URL}${feedbackImage}`
+    const maxImageWidth = pageWidth - 100
+    const maxImageHeight = pageHeight - currentY - 50
+
+    const img = new Image()
+    img.src = feebackUpdateUrl
+
+    img.onload = () => {
+      const imgAspectRatio = img.width / img.height
+
+      let imgWidth = maxImageWidth
+      let imgHeight = imgWidth / imgAspectRatio
+
+      if (imgHeight > maxImageHeight) {
+        imgHeight = maxImageHeight
+        imgWidth = imgHeight * imgAspectRatio
+      }
+
+      const imgX = (pageWidth - imgWidth) / 2
+      doc.addImage(img, 'JPEG', imgX, currentY, imgWidth, imgHeight)
+
+      const timestampMs = Date.now()
+      const newFilename = `receiving_report_${timestampMs}.pdf`
+      doc.save(newFilename)
+    }
+
+    img.onerror = () => {
+      console.error('Failed to load feedback image. Please ensure the path is correct.')
+    }
+  } else {
+    const timestampMs = Date.now()
+    const newFilename = `receiving_report_${timestampMs}.pdf`
+    doc.save(newFilename)
+  }
 }

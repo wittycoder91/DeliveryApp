@@ -208,8 +208,30 @@ const Tables = () => {
   const handleGotoDetail = (selId) => {
     navigate(`/data/deliverylogdetail/${selId}`)
   }
-  const handleDownLoadBOL = (po, weight, tareweight, netweight, pkgcount, inspection) => {
-    downloadReportPDF(po, weight, tareweight, netweight, pkgcount, inspection)
+  const handleDownLoadBOL = (
+    po,
+    weight,
+    tareweight,
+    netweight,
+    pkgcount,
+    inspection,
+    quality,
+    packageName,
+    feedback,
+    feedbackImage,
+  ) => {
+    downloadReportPDF(
+      po,
+      weight,
+      tareweight,
+      netweight,
+      pkgcount,
+      inspection,
+      quality,
+      packageName,
+      feedback,
+      feedbackImage,
+    )
   }
 
   return (
@@ -316,6 +338,10 @@ const Tables = () => {
                                 row?.netamount,
                                 row?.countpackage,
                                 row?.insepction,
+                                row?.qualityName,
+                                row?.packageName,
+                                row?.feedback,
+                                row?.feedbackImage,
                               )
                             }}
                           />
