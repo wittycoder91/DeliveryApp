@@ -459,7 +459,7 @@ export const downloadPOPDF = async (
   currentY += logoHeight / 2 + 10
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(17)
-  doc.text('PHRCHASE ORDER', pageWidth / 2 + 100, currentY, { align: 'center' })
+  doc.text('PURCHASE ORDER', pageWidth / 2 + 100, currentY, { align: 'center' })
 
   currentY += 40 // Height of the gray box
   const boxMargin = 30
