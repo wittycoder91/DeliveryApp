@@ -61,7 +61,9 @@ const DeliveryAdd = () => {
   const [curSDSUrl, setCurSDSUrl] = useState('')
   const [curOther, setCurOther] = useState('')
   const [curOtherStats, setCurOtherStatus] = useState(false)
-  // Privacy States
+  // Privacy Error Modal States
+  const [visibleErrorPrivacy, setVisibleErrorPrivacy] = useState(false)
+  // Privacy Modal States
   const [visiblePrivacy, setVisiblePrivacy] = useState(false)
 
   useEffect(() => {
@@ -330,7 +332,8 @@ const DeliveryAdd = () => {
   }
   const handleConfirm = async () => {
     if (!curPrivacyStatus) {
-      showErrorMsg('Please make sure to check the required privacy statement.')
+      setVisibleErrorPrivacy(!visibleErrorPrivacy)
+      // showErrorMsg('Please make sure to check the required privacy statement.')
       return
     }
 
@@ -632,6 +635,23 @@ const DeliveryAdd = () => {
             </CCol>
           </CCardBody>
         </CCard>
+        {/* Privacy Error Modal */}
+        <CModal
+          alignment="center"
+          visible={visibleErrorPrivacy}
+          onClose={() => setVisibleErrorPrivacy(false)}
+          aria-labelledby="VerticallyCenteredExample"
+        >
+          <CModalHeader>
+            <CModalTitle id="VerticallyCenteredExample">Privacy Statement</CModalTitle>
+          </CModalHeader>
+          <CModalBody>Please make sure to check the required privacy statement.</CModalBody>
+          <CModalFooter>
+            <CButton color="secondary" onClick={() => setVisibleErrorPrivacy(false)}>
+              Ok
+            </CButton>
+          </CModalFooter>
+        </CModal>
         {/* Privacy Modal */}
         <CModal
           alignment="center"

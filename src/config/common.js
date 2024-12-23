@@ -568,7 +568,6 @@ export const downloadPOPDF = async (
   doc.text('For and on behalf of', 360, currentY + 15)
   doc.text('ARCH POLYMERS INC', 360, currentY + 30)
 
-  const timestampMs = Date.now()
-  const newFilename = `po#_${timestampMs}.pdf`
+  const newFilename = `PO_${po}.pdf`
   doc.save(newFilename)
 }
