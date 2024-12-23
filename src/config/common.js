@@ -43,6 +43,7 @@ export const showErrorMsg = (msg) => {
   })
 }
 
+// Generate BOL PDF file
 export const downloadInvoicePDF = (
   userName,
   userAddress,
@@ -299,6 +300,7 @@ export const downloadInvoicePDF = (
   doc.save(newFilename)
 }
 
+// Generate Report PDF file
 const loadImageAsDataURL = async (path) => {
   const response = await fetch(path)
   const blob = await response.blob()
@@ -431,6 +433,7 @@ export const downloadReportPDF = async (
   }
 }
 
+// Generate PO PDF file
 export const downloadPOPDF = async (
   curName,
   curAddress,
@@ -566,6 +569,6 @@ export const downloadPOPDF = async (
   doc.text('ARCH POLYMERS INC', 360, currentY + 30)
 
   const timestampMs = Date.now()
-  const newFilename = `po_${timestampMs}.pdf`
+  const newFilename = `po#_${timestampMs}.pdf`
   doc.save(newFilename)
 }

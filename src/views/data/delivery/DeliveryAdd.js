@@ -330,7 +330,7 @@ const DeliveryAdd = () => {
   }
   const handleConfirm = async () => {
     if (!curPrivacyStatus) {
-      showErrorMsg('You must check the privacy policy.')
+      showErrorMsg('Please make sure to check the required privacy statement.')
       return
     }
 
