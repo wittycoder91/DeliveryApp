@@ -33,6 +33,7 @@ const DeliveryAdd = () => {
   const fileInputRef = useRef(null)
   const location = useLocation()
   const navigate = useNavigate()
+  const [curW9, setCurW9] = useState('')
   const [curRepeatStatus, setCurRepeatStatus] = useState(false)
   // Delivery States
   const [allMaterials, setAllMaterials] = useState([])
@@ -76,6 +77,7 @@ const DeliveryAdd = () => {
     getColors()
     getResidue()
     getConditions()
+    getUserInformation()
   }, [location.pathname])
 
   const getInitialValue = () => {
@@ -239,6 +241,27 @@ const DeliveryAdd = () => {
       }
     }
   }
+  const getUserInformation = async () => {
+    try {
+      const response = await api.get(API_URLS.GETSELUSERINFOR, {
+        params: { selEmail: localStorage.getItem('email') },
+      })
+
+      if (response.data.success && response.data.data?.length > 0) {
+        const userData = response.data.data[0]
+
+        if (userData) {
+          setCurW9(userData?.w9Path)
+        }
+      }
+    } catch (error) {
+      if (error.response?.data?.msg) {
+        showErrorMsg(error.response.data.msg)
+      } else {
+        showErrorMsg(error.message)
+      }
+    }
+  }
   const getRecentDelivery = async () => {
     try {
       const response = await api.get(API_URLS.LASTESTDELIVERY)
@@ -331,6 +354,11 @@ const DeliveryAdd = () => {
     }
   }
   const handleConfirm = async () => {
+    if (curW9.length === 0) {
+      showErrorMsg('Please upload the W9 file.')
+      return
+    }
+
     if (!curPrivacyStatus) {
       setVisibleErrorPrivacy(!visibleErrorPrivacy)
       // showErrorMsg('Please make sure to check the required privacy statement.')
@@ -590,7 +618,9 @@ const DeliveryAdd = () => {
             )}
             <CCol className="d-flex flex-wrap flex-md-row flex-column gap-4">
               <CCol>
-                <CFormLabel>Date</CFormLabel>
+                <CFormLabel>
+                  Please select delivery date and see available dock time below
+                </CFormLabel>
                 <DayPicker
                   mode="single"
                   selected={curDate}
@@ -602,7 +632,7 @@ const DeliveryAdd = () => {
                 />
               </CCol>
               <CCol>
-                <CFormLabel>Time</CFormLabel>
+                <CFormLabel></CFormLabel>
                 <CFormSelect
                   options={allTimes?.map((time) => ({
                     label: new Date(time * 1000).toISOString().substr(11, 8),

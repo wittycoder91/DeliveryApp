@@ -36,6 +36,7 @@ const Profile = () => {
   const [curPhoneNumber, setCurPhoneNumber] = useState('')
   const [curW9, setCurW9] = useState('')
   const [curW9Data, setCurW9Data] = useState('')
+  const [curContact, setCurContact] = useState('')
 
   useEffect(() => {
     getAllIndustry()
@@ -78,6 +79,7 @@ const Profile = () => {
         setCurPhoneNumber(result?.phonenumber)
         setCurIndustry(result?.industry)
         setCurW9(result?.w9Path)
+        setCurContact(result?.contact)
 
         if (result?.avatarPath) {
           const rawAvatarPath = result?.avatarPath
@@ -121,6 +123,7 @@ const Profile = () => {
       curNewPwd.length === 0 ||
       curNewReenterPwd.length === 0 ||
       curPhoneNumber.length === 0 ||
+      curContact.length === 0 ||
       (curW9.length === 0 && curW9Data.length === 0)
     ) {
       showErrorMsg('There are some missing fields')
@@ -147,6 +150,7 @@ const Profile = () => {
     formData.append('zipcode', curZipcode)
     formData.append('industry', curIndustry)
     formData.append('phonenumber', curPhoneNumber)
+    formData.append('contact', curContact)
     formData.append('uploadstatus', curImage ? 'true' : 'false')
     formData.append('uploadW9Status', curW9Data ? 'true' : 'false')
     try {
@@ -220,9 +224,9 @@ const Profile = () => {
               />
             </CCol>
             <CCol md={6}>
-              <CFormLabel>Supplier Name</CFormLabel>
+              <CFormLabel>Company Name</CFormLabel>
               <CFormInput
-                placeholder="Supplier Name"
+                placeholder="Company Name"
                 value={curName}
                 onChange={(e) => setCurName(e.target.value)}
               />
@@ -278,7 +282,15 @@ const Profile = () => {
                 onChange={(e) => setCurIndustry(e.target.value)}
               />
             </CCol>
-            <CCol xs={12}>
+            <CCol md={6}>
+              <CFormLabel>Contact Person Name</CFormLabel>
+              <CFormInput
+                placeholder="Contact Person Name"
+                value={curContact}
+                onChange={(e) => setCurContact(e.target.value)}
+              />
+            </CCol>
+            <CCol xs={6}>
               <CFormLabel>Old Password</CFormLabel>
               <CFormInput
                 type="password"

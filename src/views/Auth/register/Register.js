@@ -24,7 +24,6 @@ import {
   cilBuilding,
   cilLocomotive,
   cilPhone,
-  cilFax,
 } from '@coreui/icons'
 
 import api from 'src/services'
@@ -46,7 +45,6 @@ const Register = () => {
   const [curPhoneNumber, setCurPhoneNumber] = useState('')
   const [curAllIndustry, setCurAllIndustry] = useState([])
   const [curIndustry, setCurIndustry] = useState('-1')
-  const [curW9, setCurW9] = useState('')
   const [curContact, setCurContact] = useState('')
 
   useEffect(() => {
@@ -92,10 +90,6 @@ const Register = () => {
       reader.readAsDataURL(file)
     }
   }
-  const handleUploadW9 = (event) => {
-    const file = event.target.files[0]
-    setCurW9(file)
-  }
 
   const handleCreateAccount = async () => {
     if (
@@ -109,8 +103,7 @@ const Register = () => {
       curState?.length === 0 ||
       curZipcode?.length === 0 ||
       curPhoneNumber.length === 0 ||
-      curIndustry === '-1' ||
-      !curW9
+      curIndustry === '-1'
     ) {
       showErrorMsg('There are some missing fields')
 
@@ -119,13 +112,19 @@ const Register = () => {
 
     if (curPassword !== curReenterPassword) {
       showErrorMsg('Password does not match')
+      return
+    }
 
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+    if (!passwordRegex.test(curPassword)) {
+      showErrorMsg(
+        'Password must be at least 8 characters long and include both numbers and letters.',
+      )
       return
     }
 
     const formData = new FormData()
     formData.append('image', curImage)
-    formData.append('w9', curW9)
     formData.append('name', curName)
     formData.append('contact', curContact)
     formData.append('email', curEmail)
@@ -170,9 +169,22 @@ const Register = () => {
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="User name *"
+                      placeholder="Company name *"
                       value={curName}
                       onChange={(e) => setCurName(e.target.value)}
+                    />
+                  </CInputGroup>
+                  <CInputGroup className="mb-2">
+                    <CInputGroupText>
+                      <CIcon icon={cilLocomotive} />
+                    </CInputGroupText>
+                    <CFormSelect
+                      options={curAllIndustry?.map((industry) => ({
+                        label: industry.industryName,
+                        value: industry._id,
+                      }))}
+                      value={curIndustry}
+                      onChange={(e) => setCurIndustry(e.target.value)}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-2">
@@ -219,7 +231,7 @@ const Register = () => {
                       <CIcon icon={cilBuilding} />
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="Province *"
+                      placeholder="Province/States *"
                       value={curState}
                       onChange={(e) => setCurState(e.target.value)}
                     />
@@ -229,7 +241,7 @@ const Register = () => {
                       <CIcon icon={cilBuilding} />
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="Zip Code *"
+                      placeholder="Zip/Postal Code *"
                       value={curZipcode}
                       onChange={(e) => setCurZipcode(e.target.value)}
                     />
@@ -242,19 +254,6 @@ const Register = () => {
                       placeholder="Phone number *"
                       value={curPhoneNumber}
                       onChange={(e) => setCurPhoneNumber(e.target.value)}
-                    />
-                  </CInputGroup>
-                  <CInputGroup className="mb-2">
-                    <CInputGroupText>
-                      <CIcon icon={cilLocomotive} />
-                    </CInputGroupText>
-                    <CFormSelect
-                      options={curAllIndustry?.map((industry) => ({
-                        label: industry.industryName,
-                        value: industry._id,
-                      }))}
-                      value={curIndustry}
-                      onChange={(e) => setCurIndustry(e.target.value)}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-2">
@@ -301,18 +300,6 @@ const Register = () => {
                       />
                     </div>
                   )}
-                  <p className="text-body-secondary mb-2">W9 Upload *</p>
-                  <CInputGroup className="mb-2">
-                    <CInputGroupText>
-                      <CIcon icon={cilFax} />
-                    </CInputGroupText>
-                    <CFormInput
-                      type="file"
-                      placeholder="Upload W9 *"
-                      accept="*"
-                      onChange={handleUploadW9}
-                    />
-                  </CInputGroup>
                   <CCard className="d-grid">
                     <CButton className="dark-blue" onClick={handleCreateAccount}>
                       Create Account
