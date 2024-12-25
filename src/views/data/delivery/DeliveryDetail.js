@@ -17,7 +17,7 @@ import 'react-day-picker/dist/style.css'
 
 import api from 'src/services'
 import { API_URLS } from 'src/config/Constants'
-import { showWarningMsg, showErrorMsg } from 'src/config/common'
+import { showWarningMsg, showErrorMsg, calculateHolidays } from 'src/config/common'
 import { useNotification } from 'src/components/header/NotificationProvider'
 
 const DeliveryDetail = () => {
@@ -41,6 +41,8 @@ const DeliveryDetail = () => {
   const [curPO, setCurPO] = useState('')
   const [curSDS, setCurSDS] = useState('')
   const [curStatus, setCurStatus] = useState('')
+  const [curSelectedDates, setCurSelectedDates] = useState([])
+  const [unavailbleDates, setUnavailableDates] = useState([])
 
   useEffect(() => {
     getAllTimes()
@@ -49,6 +51,53 @@ const DeliveryDetail = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notificationCount])
 
+  useEffect(() => {
+    getUnavailbleDate()
+  }, [])
+
+  useEffect(() => {
+    if (curDate) {
+      const currentYear = new Date(curDate).getFullYear()
+      updateUnavailableDates(currentYear)
+    }
+  }, [curDate, curSelectedDates])
+
+  const updateUnavailableDates = (year) => {
+    const holidays = calculateHolidays(year)
+    const holidayDates = holidays.map((holiday) => new Date(holiday))
+
+    setUnavailableDates([...curSelectedDates, ...holidayDates])
+  }
+  const getUnavailbleDate = async () => {
+    try {
+      const response = await api.get(API_URLS.GETALLDATES)
+
+      if (response.data.success && response.data.data) {
+        if (response.data.data?.length > 0) {
+          const dates = response.data.data.map((item) => {
+            const [year, month, day] = item.date.split('-')
+            return new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+          })
+          setCurSelectedDates(dates)
+          setUnavailableDates(dates)
+        }
+      } else {
+        showWarningMsg(response.data.message)
+      }
+    } catch (error) {
+      if (error.response.data.msg) {
+        showErrorMsg(error.response.data.msg)
+      } else {
+        showErrorMsg(error.message)
+      }
+    }
+
+    const currentYear = new Date().getFullYear()
+    const holidays = calculateHolidays(currentYear)
+    const holidayDates = holidays.map((holiday) => new Date(holiday))
+
+    setUnavailableDates((prevDates) => [...prevDates, ...holidayDates])
+  }
   const getAllTimes = async () => {
     try {
       const response = await api.get(API_URLS.GETSETTING)
@@ -263,8 +312,9 @@ const DeliveryDetail = () => {
                   onSelect={setCurDate}
                   month={curDate}
                   onMonthChange={setCurDate}
-                  hideNavigation
-                  captionLayout="dropdown"
+                  // hideNavigation
+                  // captionLayout="dropdown"
+                  disabled={[{ before: new Date() }, { dayOfWeek: [0, 6] }, ...unavailbleDates]}
                 />
               </CCol>
               <CCol className="d-flex flex-column gap-3">

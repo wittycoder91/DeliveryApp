@@ -43,6 +43,36 @@ export const showErrorMsg = (msg) => {
   })
 }
 
+// Calculate US holidays
+export const calculateHolidays = (year) => {
+  const getNthDayOfMonth = (nth, dayOfWeek, month) => {
+    const firstDay = new Date(year, month, 1)
+    const firstDayOfWeek = firstDay.getDay()
+    const offset = (dayOfWeek - firstDayOfWeek + 7) % 7
+    return new Date(year, month, 1 + offset + (nth - 1) * 7)
+  }
+
+  const getLastDayOfMonth = (dayOfWeek, month) => {
+    const lastDay = new Date(year, month + 1, 0)
+    const lastDayOfWeek = lastDay.getDay()
+    const offset = (lastDayOfWeek - dayOfWeek + 7) % 7
+    return new Date(year, month + 1, 0 - offset)
+  }
+
+  return [
+    new Date(year, 0, 1),
+    getNthDayOfMonth(3, 1, 0),
+    getNthDayOfMonth(3, 1, 1),
+    getLastDayOfMonth(1, 4),
+    new Date(year, 5, 19),
+    new Date(year, 6, 4),
+    getNthDayOfMonth(1, 1, 8),
+    getNthDayOfMonth(2, 1, 9),
+    new Date(year, 10, 11),
+    getNthDayOfMonth(4, 4, 10),
+    new Date(year, 11, 25),
+  ]
+}
 // Generate BOL PDF file
 export const downloadInvoicePDF = (
   userName,

@@ -27,7 +27,7 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import api from 'src/services'
 import { API_URLS } from 'src/config/Constants'
-import { showSuccessMsg, showWarningMsg, showErrorMsg } from 'src/config/common'
+import { showSuccessMsg, showWarningMsg, showErrorMsg, calculateHolidays } from 'src/config/common'
 
 const DeliveryAdd = () => {
   const fileInputRef = useRef(null)
@@ -66,6 +66,12 @@ const DeliveryAdd = () => {
   const [visibleErrorPrivacy, setVisibleErrorPrivacy] = useState(false)
   // Privacy Modal States
   const [visiblePrivacy, setVisiblePrivacy] = useState(false)
+  const [curSelectedDates, setCurSelectedDates] = useState([])
+  const [unavailbleDates, setUnavailableDates] = useState([])
+
+  useEffect(() => {
+    getUnavailbleDate()
+  }, [])
 
   useEffect(() => {
     getInitialValue()
@@ -80,6 +86,49 @@ const DeliveryAdd = () => {
     getUserInformation()
   }, [location.pathname])
 
+  useEffect(() => {
+    if (curDate) {
+      const currentYear = curDate.getFullYear()
+      updateUnavailableDates(currentYear)
+    }
+  }, [curDate, curSelectedDates])
+
+  const updateUnavailableDates = (year) => {
+    const holidays = calculateHolidays(year)
+    const holidayDates = holidays.map((holiday) => new Date(holiday))
+
+    setUnavailableDates([...curSelectedDates, ...holidayDates])
+  }
+  const getUnavailbleDate = async () => {
+    try {
+      const response = await api.get(API_URLS.GETALLDATES)
+
+      if (response.data.success && response.data.data) {
+        if (response.data.data?.length > 0) {
+          const dates = response.data.data.map((item) => {
+            const [year, month, day] = item.date.split('-')
+            return new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+          })
+          setCurSelectedDates(dates)
+          setUnavailableDates(dates)
+        }
+      } else {
+        showWarningMsg(response.data.message)
+      }
+    } catch (error) {
+      if (error.response.data.msg) {
+        showErrorMsg(error.response.data.msg)
+      } else {
+        showErrorMsg(error.message)
+      }
+    }
+
+    const currentYear = new Date().getFullYear()
+    const holidays = calculateHolidays(currentYear)
+    const holidayDates = holidays.map((holiday) => new Date(holiday))
+
+    setUnavailableDates((prevDates) => [...prevDates, ...holidayDates])
+  }
   const getInitialValue = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
@@ -627,8 +676,9 @@ const DeliveryAdd = () => {
                   onSelect={setCurDate}
                   month={curDate}
                   onMonthChange={setCurDate}
-                  hideNavigation
-                  captionLayout="dropdown"
+                  // hideNavigation
+                  // captionLayout="dropdown"
+                  disabled={[{ before: new Date() }, { dayOfWeek: [0, 6] }, ...unavailbleDates]}
                 />
               </CCol>
               <CCol>
