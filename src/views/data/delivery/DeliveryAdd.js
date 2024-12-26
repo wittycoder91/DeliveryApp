@@ -723,9 +723,9 @@ const DeliveryAdd = () => {
           aria-labelledby="VerticallyCenteredExample"
         >
           <CModalHeader>
-            <CModalTitle id="VerticallyCenteredExample">Privacy Statement</CModalTitle>
+            <CModalTitle id="VerticallyCenteredExample">Terms and Conditions</CModalTitle>
           </CModalHeader>
-          <CModalBody>Please make sure to check the required privacy statement.</CModalBody>
+          <CModalBody>Please make sure to check the required terms and conditions.</CModalBody>
           <CModalFooter>
             <CButton color="secondary" onClick={() => setVisibleErrorPrivacy(false)}>
               Ok
