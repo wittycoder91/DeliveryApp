@@ -53,6 +53,8 @@ const DeliveryDetail = () => {
 
   useEffect(() => {
     getUnavailbleDate()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -60,6 +62,8 @@ const DeliveryDetail = () => {
       const currentYear = new Date(curDate).getFullYear()
       updateUnavailableDates(currentYear)
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [curDate, curSelectedDates])
 
   const updateUnavailableDates = (year) => {
