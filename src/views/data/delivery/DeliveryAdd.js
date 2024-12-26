@@ -91,6 +91,8 @@ const DeliveryAdd = () => {
       const currentYear = curDate.getFullYear()
       updateUnavailableDates(currentYear)
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [curDate, curSelectedDates])
 
   const updateUnavailableDates = (year) => {
