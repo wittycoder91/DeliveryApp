@@ -742,7 +742,7 @@ const DeliveryAdd = () => {
           aria-labelledby="VerticallyCenteredExample"
         >
           <CModalHeader>
-            <CModalTitle id="VerticallyCenteredExample">Privacy Statement</CModalTitle>
+            <CModalTitle id="VerticallyCenteredExample">Terms and Conditions</CModalTitle>
           </CModalHeader>
           <CModalBody>{curPrivacy}</CModalBody>
           <CModalFooter>
