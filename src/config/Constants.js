@@ -2,6 +2,8 @@ export const API_URLS = {
   // Auth
   LOGIN: `${process.env.REACT_APP_API_URL}/auth/user/login`,
   REGISTER: `${process.env.REACT_APP_API_URL}/auth/user/register`,
+  FORGETPASSWORD: `${process.env.REACT_APP_API_URL}/auth/user/forgetpassword`,
+  CHANGEPASSWORD: `${process.env.REACT_APP_API_URL}/auth/user/changepassword`,
   GETSELUSERINFOR: `${process.env.REACT_APP_API_URL}/user/get-sel-userinfor`,
   GETALLINDUSTRY: `${process.env.REACT_APP_API_URL}/auth/admin/get-allindustry`,
   // Dashboard

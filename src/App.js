@@ -11,6 +11,8 @@ const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 // Pages
 const Login = React.lazy(() => import('./views/Auth/login/Login'))
 const Register = React.lazy(() => import('./views/Auth/register/Register'))
+const ForgetPassword = React.lazy(() => import('./views/Auth/forget/ForgetPassword'))
+const ChangePassword = React.lazy(() => import('./views/Auth/forget/ChangePassword'))
 
 // Pages
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
@@ -54,6 +56,19 @@ const AppWrapper = () => {
       <Routes>
         <Route exact path="/login" name="Login Page" element={<Login />} />
         <Route exact path="/register" name="Register Page" element={<Register />} />
+        <Route exact path="/forgetpassword" name="Forget Page" element={<ForgetPassword />} />
+        {/* <Route
+          exact
+          path="/changepassword/:email"
+          name="Change Password Page"
+          element={<ChangePassword />}
+        /> */}
+        <Route
+          exact
+          path="/changepassword"
+          name="Change Password Page"
+          element={<ChangePassword />}
+        />
         <Route exact path="/404" name="Page 404" element={<Page404 />} />
         <Route exact path="/500" name="Page 500" element={<Page500 />} />
         <Route path="*" name="Home" element={<DefaultLayout />} />

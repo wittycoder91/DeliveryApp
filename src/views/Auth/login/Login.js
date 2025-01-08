@@ -92,10 +92,10 @@ const Login = () => {
                       Login
                     </CButton>
                   </CCol>
-                  <CCol className="w-100 mt-3 text-center">
-                    <p className="text-body-secondary mb-1">
-                      Forgotten password? Please send email to info@archpolymers.com
-                    </p>
+                  <CCol className="w-100 mt-3 text-end">
+                    <Link to="/changepassword" className="text-decoration-none">
+                      <strong>Forget Password?</strong>
+                    </Link>
                   </CCol>
                   <CCol className="w-100 text-center">
                     <p className="text-body-secondary">
