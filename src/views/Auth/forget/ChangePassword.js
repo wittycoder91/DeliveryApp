@@ -17,7 +17,6 @@ import CIcon from '@coreui/icons-react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { cilLockLocked } from '@coreui/icons'
-import { useParams } from 'react-router-dom'
 
 import { API_URLS } from '../../../config/Constants'
 import { showErrorMsg, showSuccessMsg } from 'src/config/common'
