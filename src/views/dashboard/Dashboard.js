@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
-import { CCard, CCardBody, CCol, CRow, CProgress, CFormLabel } from '@coreui/react'
+import { CCard, CCardBody, CCol, CRow } from '@coreui/react'
+// import { CCard, CCardBody, CCol, CRow, CProgress, CFormLabel } from '@coreui/react'
 import { CChartBar, CChartLine } from '@coreui/react-chartjs'
 
 import api from 'src/services'
@@ -9,13 +10,13 @@ import { API_URLS } from 'src/config/Constants'
 import { showWarningMsg, showErrorMsg } from 'src/config/common'
 
 const Dashboard = () => {
-  const [curWeight, setCurWeight] = useState(0)
-  const [curPlanWeight, setCurPlanWeight] = useState(0)
-  const [curLoyalty, setCurLoyalty] = useState(0)
-  const [curImageUrl, setCurImageUrl] = useState('')
-  const [curLoyaltyLevel, setCurLoyaltyLevel] = useState('')
-  const [curRewards, setCurRewards] = useState('')
-  const [curBenefit, setCurBenefit] = useState('')
+  // const [curWeight, setCurWeight] = useState(0)
+  // const [curPlanWeight, setCurPlanWeight] = useState(0)
+  // const [curLoyalty, setCurLoyalty] = useState(0)
+  // const [curImageUrl, setCurImageUrl] = useState('')
+  // const [curLoyaltyLevel, setCurLoyaltyLevel] = useState('')
+  // const [curRewards, setCurRewards] = useState('')
+  // const [curBenefit, setCurBenefit] = useState('')
   const [curDeliveryData, setDeliveryData] = useState({
     labels: [],
     datasets: [
@@ -38,54 +39,54 @@ const Dashboard = () => {
   })
 
   useEffect(() => {
-    getLoyaltyData()
+    // getLoyaltyData()
     getDeliveryData()
     getWeightData()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const getLoyaltyData = async () => {
-    try {
-      const response = await api.get(API_URLS.GETDASHBOARDLOYALTY)
+  // const getLoyaltyData = async () => {
+  //   try {
+  //     const response = await api.get(API_URLS.GETDASHBOARDLOYALTY)
 
-      if (response.data.success && response.data.data) {
-        setCurWeight(response.data.data?.totalweight)
-        setCurPlanWeight(response.data.data?.loyaltyVal)
-        setCurLoyalty(response.data.data?.loyalty)
-        setCurBenefit(response.data.data?.benefit)
+  //     if (response.data.success && response.data.data) {
+  //       setCurWeight(response.data.data?.totalweight)
+  //       setCurPlanWeight(response.data.data?.loyaltyVal)
+  //       setCurLoyalty(response.data.data?.loyalty)
+  //       setCurBenefit(response.data.data?.benefit)
 
-        if (response.data.data?.loyalty === 1) {
-          setCurImageUrl('/icons/bronz.png')
-          setCurLoyaltyLevel('Bronze')
-        } else if (response.data.data?.loyalty === 2) {
-          setCurImageUrl('/icons/silver.png')
-          setCurLoyaltyLevel('Silver')
-        } else if (response.data.data?.loyalty === 3) {
-          setCurImageUrl('/icons/gold.png')
-          setCurLoyaltyLevel('Golden')
-        } else {
-          setCurImageUrl('/icons/beginner.png')
-          setCurLoyaltyLevel('Beginner')
-        }
+  //       if (response.data.data?.loyalty === 1) {
+  //         setCurImageUrl('/icons/bronz.png')
+  //         setCurLoyaltyLevel('Bronze')
+  //       } else if (response.data.data?.loyalty === 2) {
+  //         setCurImageUrl('/icons/silver.png')
+  //         setCurLoyaltyLevel('Silver')
+  //       } else if (response.data.data?.loyalty === 3) {
+  //         setCurImageUrl('/icons/gold.png')
+  //         setCurLoyaltyLevel('Golden')
+  //       } else {
+  //         setCurImageUrl('/icons/beginner.png')
+  //         setCurLoyaltyLevel('Beginner')
+  //       }
 
-        let rewardsStr = ''
-        rewardsStr = response.data.data?.totalweight
-        if (response.data.data?.loyalty < 3) {
-          rewardsStr += ' / ' + response.data.data?.loyaltyVal + ' LBS'
-        }
-        setCurRewards(rewardsStr)
-      } else {
-        showWarningMsg(response.data.message)
-      }
-    } catch (error) {
-      if (error.response.data.msg) {
-        showErrorMsg(error.response.data.msg)
-      } else {
-        showErrorMsg(error.message)
-      }
-    }
-  }
+  //       let rewardsStr = ''
+  //       rewardsStr = response.data.data?.totalweight
+  //       if (response.data.data?.loyalty < 3) {
+  //         rewardsStr += ' / ' + response.data.data?.loyaltyVal + ' LBS'
+  //       }
+  //       setCurRewards(rewardsStr)
+  //     } else {
+  //       showWarningMsg(response.data.message)
+  //     }
+  //   } catch (error) {
+  //     if (error.response.data.msg) {
+  //       showErrorMsg(error.response.data.msg)
+  //     } else {
+  //       showErrorMsg(error.message)
+  //     }
+  //   }
+  // }
   const getDeliveryData = async () => {
     try {
       const response = await api.get(API_URLS.GETDASHBOARDDELIERY)
@@ -151,7 +152,7 @@ const Dashboard = () => {
 
   return (
     <CCol className="d-flex flex-column gap-3">
-      <CCard className="d-flex flex-column gap-3 p-4">
+      {/* <CCard className="d-flex flex-column gap-3 p-4">
         <CCol className="d-flex flex-row gap-3">
           {curImageUrl.length > 0 && (
             <div className="mx-2">
@@ -199,7 +200,7 @@ const Dashboard = () => {
           <h5>Loyalty Rewards Benefit</h5>
           <p>{curBenefit}</p>
         </div>
-      </CCard>
+      </CCard> */}
       <CCard className="p-4 gap-2">
         <h3>Supply Information</h3>
         <WidgetsDropdown />
