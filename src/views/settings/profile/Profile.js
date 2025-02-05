@@ -119,9 +119,9 @@ const Profile = () => {
       curCity.length === 0 ||
       curState.length === 0 ||
       curZipcode.length === 0 ||
-      curOldPwd.length === 0 ||
-      curNewPwd.length === 0 ||
-      curNewReenterPwd.length === 0 ||
+      // curOldPwd.length === 0 ||
+      // curNewPwd.length === 0 ||
+      // curNewReenterPwd.length === 0 ||
       curPhoneNumber.length === 0 ||
       curContact.length === 0 ||
       (curW9.length === 0 && curW9Data.length === 0)
@@ -130,8 +130,13 @@ const Profile = () => {
       return
     }
 
-    if (curNewPwd !== curNewReenterPwd) {
-      showErrorMsg('Password does not match')
+    if (curOldPwd.length === 0 && (curNewPwd.length > 0 || curNewReenterPwd.length > 0)) {
+      showErrorMsg('Please input the old password')
+      return
+    }
+
+    if (curNewPwd.length > 0 && curNewPwd !== curNewReenterPwd) {
+      showErrorMsg('New Password does not match')
       return
     }
 

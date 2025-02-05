@@ -330,8 +330,7 @@ const DeliveryDetail = () => {
                       .map((time) => ({
                         label: new Date(time * 1000).toISOString().substr(11, 8),
                         value: time,
-                      }))
-                    }
+                      }))}
                     value={curTime}
                     onChange={(e) => setCurTime(e.target.value)}
                   />
