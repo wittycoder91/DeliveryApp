@@ -29,7 +29,7 @@ const ForgetPassword = () => {
       })
 
       if (response.data.success) {
-        showSuccessMsg('Registration Success')
+        showSuccessMsg(response.data.message)
       } else {
         showErrorMsg(response.data.message)
       }
