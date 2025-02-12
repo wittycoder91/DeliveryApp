@@ -23,12 +23,6 @@ const ForgetPassword = () => {
   const [curEmail, setCurEmail] = useState('')
 
   const handleSendEmail = async () => {
-    if (curEmail?.length === 0) {
-      showErrorMsg('There are some missing fields')
-
-      return
-    }
-
     try {
       const response = await axios.post(API_URLS.FORGETPASSWORD, {
         email: curEmail,

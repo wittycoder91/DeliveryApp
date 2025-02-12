@@ -33,7 +33,7 @@ const DeliveryAdd = () => {
   const fileInputRef = useRef(null)
   const location = useLocation()
   const navigate = useNavigate()
-  const [curW9, setCurW9] = useState('')
+  // const [curW9, setCurW9] = useState('')
   const [curRepeatStatus, setCurRepeatStatus] = useState(false)
   // Delivery States
   const [allMaterials, setAllMaterials] = useState([])
@@ -83,7 +83,7 @@ const DeliveryAdd = () => {
     getColors()
     getResidue()
     getConditions()
-    getUserInformation()
+    // getUserInformation()
   }, [location.pathname])
 
   useEffect(() => {
@@ -292,27 +292,27 @@ const DeliveryAdd = () => {
       }
     }
   }
-  const getUserInformation = async () => {
-    try {
-      const response = await api.get(API_URLS.GETSELUSERINFOR, {
-        params: { selEmail: localStorage.getItem('email') },
-      })
+  // const getUserInformation = async () => {
+  //   try {
+  //     const response = await api.get(API_URLS.GETSELUSERINFOR, {
+  //       params: { selEmail: localStorage.getItem('email') },
+  //     })
 
-      if (response.data.success && response.data.data?.length > 0) {
-        const userData = response.data.data[0]
+  //     if (response.data.success && response.data.data?.length > 0) {
+  //       const userData = response.data.data[0]
 
-        if (userData) {
-          setCurW9(userData?.w9Path)
-        }
-      }
-    } catch (error) {
-      if (error.response?.data?.msg) {
-        showErrorMsg(error.response.data.msg)
-      } else {
-        showErrorMsg(error.message)
-      }
-    }
-  }
+  //       if (userData && userData?.w9Path) {
+  //         setCurW9(userData?.w9Path)
+  //       }
+  //     }
+  //   } catch (error) {
+  //     if (error.response?.data?.msg) {
+  //       showErrorMsg(error.response.data.msg)
+  //     } else {
+  //       showErrorMsg(error.message)
+  //     }
+  //   }
+  // }
   const getRecentDelivery = async () => {
     try {
       const response = await api.get(API_URLS.LASTESTDELIVERY)
@@ -405,10 +405,10 @@ const DeliveryAdd = () => {
     }
   }
   const handleConfirm = async () => {
-    if (curW9.length === 0) {
-      showErrorMsg('Please upload the W9 file.')
-      return
-    }
+    // if (curW9.length === 0) {
+    //   showErrorMsg('Please upload the W9 file.')
+    //   return
+    // }
 
     if (!curPrivacyStatus) {
       setVisibleErrorPrivacy(!visibleErrorPrivacy)

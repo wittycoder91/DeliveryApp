@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -22,12 +22,16 @@ import { API_URLS } from '../../../config/Constants'
 import { showErrorMsg, showSuccessMsg } from 'src/config/common'
 
 const ChangePassword = () => {
-  const [curEmail, setCurEmail] = useState('')
   const [curPassword, setCurPassword] = useState('')
   const [curReenterPassword, setCurReenterPassword] = useState('')
 
+  const location = useLocation()
+  const queryParams = new URLSearchParams(location.search)
+  const email = queryParams.get('email')
+  console.log(email)
+
   const handleUpdatePassword = async () => {
-    if (curEmail?.length === 0 || curPassword?.length === 0 || curReenterPassword?.length === 0) {
+    if (email?.length === 0 || curPassword?.length === 0 || curReenterPassword?.length === 0) {
       showErrorMsg('There are some missing fields')
 
       return
@@ -48,7 +52,7 @@ const ChangePassword = () => {
 
     try {
       const response = await axios.post(API_URLS.CHANGEPASSWORD, {
-        email: curEmail,
+        email: email,
         password: curPassword,
       })
 
@@ -74,15 +78,6 @@ const ChangePassword = () => {
                   <p className="text-body-secondary">
                     Enter a new password below to change your password
                   </p>
-                  <CInputGroup className="mb-2">
-                    <CInputGroupText>@</CInputGroupText>
-                    <CFormInput
-                      placeholder="Email *"
-                      type="mail"
-                      value={curEmail}
-                      onChange={(e) => setCurEmail(e.target.value)}
-                    />
-                  </CInputGroup>
                   <CInputGroup className="mb-2">
                     <CInputGroupText>
                       <CIcon icon={cilLockLocked} />

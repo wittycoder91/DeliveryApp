@@ -93,7 +93,7 @@ const Login = () => {
                     </CButton>
                   </CCol>
                   <CCol className="w-100 mt-3 text-end">
-                    <Link to="/changepassword" className="text-decoration-none">
+                    <Link to="/forgetpassword" className="text-decoration-none">
                       <strong>Forget Password?</strong>
                     </Link>
                   </CCol>
