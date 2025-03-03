@@ -187,12 +187,21 @@ export const downloadInvoicePDF = (
   doc.setFontSize(9)
   currentY += 10
   // Table Headers
+  // const tableHeader = [
+  //   { label: 'NO. SHIPPING UNITS', width: 130 },
+  //   { label: 'TIME', width: 50 },
+  //   { label: 'DESCRIPTION OF ARTICLES', width: 150 },
+  //   { label: 'WEIGHT', width: 70 },
+  //   { label: 'UNIT', width: 50 },
+  //   { label: 'CHARGES', width: 60 },
+  // ]
   const tableHeader = [
-    { label: 'NO. SHIPPING UNITS', width: 130 },
-    { label: 'TIME', width: 50 },
-    { label: 'DESCRIPTION OF ARTICLES', width: 150 },
-    { label: 'WEIGHT', width: 70 },
-    { label: 'UNIT', width: 50 },
+    { label: 'PO#', width: 50 },
+    { label: 'NO. SHIPPING UNITS', width: 110 },
+    { label: 'TIME', width: 45 },
+    { label: 'DESCRIPTION OF ARTICLES', width: 140 },
+    { label: 'WEIGHT', width: 60 },
+    { label: 'UNIT', width: 45 },
     { label: 'CHARGES', width: 60 },
   ]
 
@@ -206,38 +215,34 @@ export const downloadInvoicePDF = (
   // First Row
   currentY += rowHeight
   tableX = marginX
-  doc.setFont('helvetica', 'normal')
-  doc.rect(marginX, currentY, 130, rowHeight) // NO. SHIPPING UNITS
-  doc.text('PP Purge', marginX + 5, currentY + 14)
-  doc.rect(marginX + 130, currentY, 50, rowHeight) // TIME
-  doc.rect(marginX + 180, currentY, 150, rowHeight) // DESCRIPTION
-  doc.rect(marginX + 330, currentY, 70, rowHeight) // WEIGHT
-  doc.text(`${selWegiht}`, marginX + 340, currentY + 14)
-  doc.rect(marginX + 400, currentY, 50, rowHeight) // UNIT
-  doc.text('LBS', marginX + 410, currentY + 14)
-  doc.rect(marginX + 450, currentY, 60, rowHeight) // CHARGES
 
-  // Second Row
-  currentY += rowHeight
-  tableX = marginX
   doc.setFont('helvetica', 'bold')
-  doc.rect(marginX, currentY, 130, rowHeight)
+  doc.rect(marginX, currentY, 50, rowHeight)
   doc.text(`${selPO}`, marginX + 5, currentY + 14)
-  doc.rect(marginX + 130, currentY, 50, rowHeight)
-  doc.rect(marginX + 180, currentY, 150, rowHeight)
-  doc.rect(marginX + 330, currentY, 70, rowHeight)
-  doc.rect(marginX + 400, currentY, 50, rowHeight)
+  doc.rect(marginX + 50, currentY, 110, rowHeight)
+  doc.rect(marginX + 160, currentY, 45, rowHeight)
+  doc.rect(marginX + 205, currentY, 140, rowHeight)
+  doc.rect(marginX + 345, currentY, 60, rowHeight)
+  doc.text(`${selWegiht}`, marginX + 350, currentY + 14)
+  doc.rect(marginX + 405, currentY, 45, rowHeight)
+  doc.text('LBS', marginX + 410, currentY + 14)
   doc.rect(marginX + 450, currentY, 60, rowHeight)
 
-  // Third Row
+  const drawRow = (doc, startX, startY, columns, rowHeight) => {
+    let x = startX
+    columns.forEach((width) => {
+      doc.rect(x, startY, width, rowHeight)
+      x += width
+    })
+  }
+  const talbeRowColumns = [50, 110, 45, 140, 60, 45, 60]
+  // Draw second row
   currentY += rowHeight
-  tableX = marginX
-  doc.rect(marginX, currentY, 130, rowHeight)
-  doc.rect(marginX + 130, currentY, 50, rowHeight)
-  doc.rect(marginX + 180, currentY, 150, rowHeight)
-  doc.rect(marginX + 330, currentY, 70, rowHeight)
-  doc.rect(marginX + 400, currentY, 50, rowHeight)
-  doc.rect(marginX + 450, currentY, 60, rowHeight)
+  doc.setFont('helvetica', 'bold')
+  drawRow(doc, marginX, currentY, talbeRowColumns, rowHeight)
+  // Draw third row
+  currentY += rowHeight
+  drawRow(doc, marginX, currentY, talbeRowColumns, rowHeight)
 
   // REMIT C.O.D. Section
   currentY += rowHeight
@@ -419,6 +424,10 @@ export const downloadReportPDF = async (
     }
     lines.push(line)
     for (const l of lines) {
+      if (y + lineHeight > pageHeight - 50) {
+        doc.addPage()
+        y = 50
+      }
       doc.text(l.trim(), x, y)
       y += lineHeight
     }
@@ -426,45 +435,55 @@ export const downloadReportPDF = async (
   }
   currentY = wrapText(doc, feedback, 50, currentY, pageWidth - 100, 16)
 
-  if (feedbackImage) {
-    const feebackUpdateUrl = `${process.env.REACT_APP_UPLOAD_URL}${feedbackImage}`
+  if (feedbackImage && feedbackImage.length > 0) {
     const maxImageWidth = pageWidth - 100
-    const maxImageHeight = pageHeight - currentY - 50
+    let imgY = currentY
 
-    const img = new Image()
-    img.src = feebackUpdateUrl
+    const loadImage = async (imgSrc) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image()
+        img.src = `${process.env.REACT_APP_UPLOAD_URL}${imgSrc}`
 
-    img.onload = () => {
-      const imgAspectRatio = img.width / img.height
+        img.onload = () => {
+          const imgAspectRatio = img.width / img.height
 
-      let imgWidth = maxImageWidth
-      let imgHeight = imgWidth / imgAspectRatio
+          let imgWidth = maxImageWidth
+          let imgHeight = imgWidth / imgAspectRatio
 
-      if (imgHeight > maxImageHeight) {
-        imgHeight = maxImageHeight
-        imgWidth = imgHeight * imgAspectRatio
-      }
+          // If image overflows the page, add a new page
+          if (imgY + imgHeight > pageHeight - 50) {
+            doc.addPage()
+            imgY = 50
+          }
 
-      const imgX = (pageWidth - imgWidth) / 2
-      doc.addImage(img, 'JPEG', imgX, currentY, imgWidth, imgHeight)
+          const imgX = (pageWidth - imgWidth) / 2
+          doc.addImage(img, 'JPEG', imgX, imgY, imgWidth, imgHeight)
 
-      const timestampMs = Date.now()
-      const newFilename = `receiving_report_${timestampMs}.pdf`
-      doc.save(newFilename)
+          imgY += imgHeight + 10
+          resolve()
+        }
+
+        img.onerror = () => {
+          console.error(`Failed to load image: ${imgSrc}`)
+          reject()
+        }
+      })
     }
 
-    img.onerror = () => {
-      console.error('Failed to load feedback image. Please ensure the path is correct.')
+    for (let i = 0; i < feedbackImage.length; i++) {
+      await loadImage(feedbackImage[i])
     }
-  } else {
-    const timestampMs = Date.now()
-    const newFilename = `receiving_report_${timestampMs}.pdf`
-    doc.save(newFilename)
   }
+
+  // Save the PDF after all images are added
+  const timestampMs = Date.now()
+  const newFilename = `receiving_report_${timestampMs}.pdf`
+  doc.save(newFilename)
 }
 
 // Generate PO PDF file
 export const downloadPOPDF = async (
+  curMaterial,
   curName,
   curAddress,
   curCity,
@@ -572,7 +591,7 @@ export const downloadPOPDF = async (
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(10)
   doc.text(`${weight} LBS`, 30, currentY + 10)
-  doc.text('PP SUPERSACKS; CLEAN', 100, currentY + 10)
+  doc.text(curMaterial, 100, currentY + 10)
   doc.text(`${price}/LB`, 312, currentY + 10)
   doc.text(parseFloat(weight * price).toFixed(2), 370, currentY + 10)
   doc.text('NET 60 DAYS', 440, currentY + 10)
@@ -594,6 +613,11 @@ export const downloadPOPDF = async (
   doc.setFontSize(11)
   doc.text('VENDOR', 165, currentY + 15)
   // Right Section
+  const signUrl = await loadImageAsDataURL('/sign.jpeg')
+  const signWidth = 180
+  const signHeight = 50
+  doc.addImage(signUrl, 'JPEG', 340, currentY - 50, signWidth, signHeight)
+
   doc.line(350, currentY, 500, currentY)
   doc.text('For and on behalf of', 360, currentY + 15)
   doc.text('ARCH POLYMERS INC', 360, currentY + 30)

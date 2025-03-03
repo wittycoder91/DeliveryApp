@@ -212,8 +212,9 @@ const Tables = () => {
   const handleDownLoadBOL = (weight, po) => {
     downloadInvoicePDF(curName, curAddress, curCity, curState, curZipcode, po, weight)
   }
-  const handleDownLoadPO = (weight, po, price, date) => {
+  const handleDownLoadPO = (curMaterial, weight, po, price, date) => {
     downloadPOPDF(
+      curMaterial,
       curName,
       curAddress,
       curCity,
@@ -345,7 +346,13 @@ const Tables = () => {
                             icon={cilArrowThickBottom}
                             onClick={(event) => {
                               event.stopPropagation()
-                              handleDownLoadPO(row?.weight, row?.po, row?.price, row?.date)
+                              handleDownLoadPO(
+                                row?.materialName,
+                                row?.weight,
+                                row?.po,
+                                row?.price,
+                                row?.date,
+                              )
                             }}
                           />
                         )}

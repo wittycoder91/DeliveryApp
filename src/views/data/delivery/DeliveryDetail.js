@@ -8,12 +8,15 @@ import {
   CRow,
   CButton,
   CFormSelect,
+  CFormTextarea,
 } from '@coreui/react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { DayPicker } from 'react-day-picker'
 import 'react-day-picker/dist/style.css'
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
+import { Carousel } from 'react-responsive-carousel'
 
 import api from 'src/services'
 import { API_URLS } from 'src/config/Constants'
@@ -35,11 +38,12 @@ const DeliveryDetail = () => {
   const [curResidue, setCurResidue] = useState('')
   const [curColor, setCurColor] = useState('')
   const [curCondition, setCurCondition] = useState('')
-  const [curLogoPreview, setCurLogoPreview] = useState('')
+  const [curImageUrl, setCurImageUrl] = useState([])
   const [curDate, setCurDate] = useState('')
   const [curTime, setCurTime] = useState(0)
   const [curPO, setCurPO] = useState('')
   const [curSDS, setCurSDS] = useState('')
+  const [curNote, setCurNote] = useState('')
   const [curStatus, setCurStatus] = useState('')
   const [curSelectedDates, setCurSelectedDates] = useState([])
   const [unavailbleDates, setUnavailableDates] = useState([])
@@ -144,12 +148,16 @@ const DeliveryDetail = () => {
         setCurCountPackage(response.data.data?.countpackage)
         setCurColor(response.data.data?.color)
         setCurCondition(response.data.data?.condition)
-        setCurLogoPreview(response.data.data?.avatarPath)
+        const updatedAvatarPaths = response.data.data?.avatarPath.map((path) =>
+          path.replace(/\\/g, '/'),
+        )
+        setCurImageUrl(updatedAvatarPaths)
         setCurDate(response.data.data?.date)
         setCurTime(response.data.data?.time)
         setCurPO(response.data.data?.po)
         setCurSDS(response.data.data?.sdsPath)
         setCurStatus(response.data.data?.state)
+        setCurNote(response.data.data?.note)
         if (response.data.data?.residue === 'Other') {
           setCurResidue(response.data.data?.other)
         } else {
@@ -175,12 +183,13 @@ const DeliveryDetail = () => {
     setCurResidue('')
     setCurColor('')
     setCurCondition('')
-    setCurLogoPreview('')
+    setCurImageUrl([])
     setCurDate('')
     setCurTime(0)
     setCurPO('')
     setCurSDS('')
     setCurStatus('')
+    setCurNote('')
   }
 
   const handleConfirm = async () => {
@@ -297,16 +306,27 @@ const DeliveryDetail = () => {
                 />
               </CCol>
             </CCol>
-            {curLogoPreview && (
-              <div className="mb-4 text-center">
-                <p className="text-body-secondary">Delivery Uploaded Image:</p>
-                <img
-                  src={`${process.env.REACT_APP_UPLOAD_URL}${curLogoPreview}`}
-                  alt="Delivery"
-                  style={{ maxWidth: '100%', maxHeight: '150px', borderRadius: '5px' }}
-                />
-              </div>
-            )}
+            <CCol className="d-flex flex-wrap flex-md-row flex-column gap-4">
+              <CCol>
+                <CFormLabel>Note</CFormLabel>
+                <CFormTextarea rows={3} value={curNote} readOnly />
+              </CCol>
+            </CCol>
+            <CCol className="d-flex flex-wrap flex-md-row flex-column gap-2">
+              <CFormLabel>Material Photo Upload</CFormLabel>
+              <Carousel showThumbs={false} className="w-100">
+                {curImageUrl.length > 0 &&
+                  curImageUrl.map((image, index) => (
+                    <div key={index} className="position-relative">
+                      <img
+                        src={`${process.env.REACT_APP_UPLOAD_URL}${image}`}
+                        style={{ height: '300px', objectFit: 'contain' }}
+                        alt=""
+                      />
+                    </div>
+                  ))}
+              </Carousel>
+            </CCol>
             <CCol className="d-flex flex-wrap flex-md-row flex-column gap-4">
               <CCol>
                 <CFormLabel>Date</CFormLabel>
